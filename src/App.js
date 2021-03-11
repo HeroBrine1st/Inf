@@ -1,15 +1,41 @@
 import './App.css';
-import "./ButtonAppBar"
-import ButtonAppBar from "./ButtonAppBar";
+import "./MainAppBar"
+import MainAppBar from "./MainAppBar";
+import {Button, Paper} from "@material-ui/core";
+
+
 function App() {
   return (
     <div className="App">
       <div className="appbar">
-        <ButtonAppBar/>
+        <MainAppBar/>
       </div>
       <div className="container">
-        <div className="center_this">abc</div>
-        <div className="center_this">abc2</div>
+        <Paper className="paper">
+          Подготовка по тематическим блокам
+          <div className="content">
+            <ul>
+              <li>Здесь может быть ваша реклама</li>
+              <li>Тут тоже</li>
+            </ul>
+          </div>
+          <Button variant="contained" color="primary">
+            Нажми меня
+          </Button>
+        </Paper>
+
+        <Paper className="paper">
+          Отработка знаний по вариантам ЕГЭ
+          <div className="content">
+            <ul>
+              <li>Здесь может быть ваша реклама</li>
+              <li>Тут тоже</li>
+            </ul>
+          </div>
+          <Button variant="contained" color="primary">
+            Нажми меня
+          </Button>
+        </Paper>
       </div>
     </div>
   );

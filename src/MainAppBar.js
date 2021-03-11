@@ -16,14 +16,15 @@ const useStyles = makeStyles((theme) => ({
   },
   title: {
     //flexGrow: 1,
-    marginRight: theme.spacing(2),
+    //marginRight: theme.spacing(2),
+    margin: "right",
   },
 }));
 
 
 
 
-const ButtonAppBar = () => {
+const MainAppBar = () => {
   const classes = useStyles();
   return (
     <div className={classes.root}>
@@ -34,14 +35,13 @@ const ButtonAppBar = () => {
               <MenuIcon/>
             </IconButton>
             <Typography variant="h6" className={classes.title}>
-              News
+              Информатика
             </Typography>
           </Toolbar>
         </AppBar>
       </HideOnScroll>
       <Toolbar />
-
     </div>
   );
 };
-export default ButtonAppBar
+export default MainAppBar

@@ -11,7 +11,7 @@
   display: flex;
   flex-direction: row;
   align-items: stretch;
-  justify-content: space-evenly;
+  justify-content: center;
   font-size: calc(10px + 2vmin);
   color: white;
   margin: auto;
@@ -20,11 +20,19 @@
   background-color: #474e56;
 }
 
-.center_this {
-  vertical-align: middle;
+.paper {
+  display: flex;
+  flex-wrap: wrap;
+  align-self: center;
+  text-align: center;
+  justify-content: center;
+  margin: 5%;
+  width: 25%;
+  padding: 8px;
+  /*height: 256px;*/
 }
 
-/*.content {*/
-/*  margin-left: 2%;*/
-/*  margin-right: 2%;*/
-/*}*/
+.content {
+  font-size: calc(4px + 1.5vmin);
+  text-align: left;
+}
