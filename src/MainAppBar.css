@@ -1,0 +1,10 @@
+.navDrawerList {
+    flex: 1 1 auto;
+    width: 250px;
+}
+
+.navDrawerFooter {
+    position: absolute;
+    bottom: 1%;
+    margin-left: 2%;
+}

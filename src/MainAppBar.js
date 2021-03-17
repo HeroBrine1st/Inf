@@ -1,38 +1,41 @@
 import React from 'react';
-import {makeStyles} from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import HideOnScroll from "./utils/HideOnScroll";
+import {Drawer, List, ListItem, ListItemIcon, ListItemText, makeStyles} from "@material-ui/core";
+import "./MainAppBar.css"
+import InboxIcon from '@material-ui/icons/Inbox';
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 
+// В CSS эту хуйню не вывести :/
 const useStyles = makeStyles((theme) => ({
-  root: {
+  appBar: {
     flexGrow: 1,
+    position: 'relative', // Чтобы дравер открывался под тулбаром
+    zIndex: 1400, // Это тоже
   },
   menuButton: {
     marginRight: theme.spacing(2),
   },
   title: {
-    //flexGrow: 1,
-    //marginRight: theme.spacing(2),
     margin: "right",
   },
 }));
 
-
-
-
-const MainAppBar = () => {
+function MainAppBar() {
   const classes = useStyles();
-  return (
-    <div className={classes.root}>
+  const [drawer, setDrawer] = React.useState(false);
+  return <div>
+    <div className={classes.appBar}>
       <HideOnScroll>
         <AppBar>
           <Toolbar>
-            <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
-              <MenuIcon/>
+            <IconButton edge="start" color="inherit" aria-label="menu" className={classes.menuButton}
+                        onClick={() => setDrawer(!drawer)}>
+              {drawer ? (<ArrowBackIcon/>) : (<MenuIcon/>)}
             </IconButton>
             <Typography variant="h6" className={classes.title}>
               Информатика
@@ -40,8 +43,24 @@ const MainAppBar = () => {
           </Toolbar>
         </AppBar>
       </HideOnScroll>
-      <Toolbar />
+      <Toolbar/>
+      <Drawer anchor="left" variant="temporary" open={drawer} onClose={() => setDrawer(false)}>
+        <Toolbar/> {/*Костыль, чтобы тулбар не перекрывал дравер*/}
+        <List className="navDrawerList">
+          <ListItem button>
+            <ListItemIcon>
+              <InboxIcon/>
+            </ListItemIcon>
+            <ListItemText>Inbox</ListItemText>
+          </ListItem>
+        </List>
+        <div className="navDrawerFooter">
+          Все права защищены блять, закрой нахуй, дует
+        </div>
+      </Drawer>
     </div>
-  );
-};
+
+  </div>;
+}
+
 export default MainAppBar

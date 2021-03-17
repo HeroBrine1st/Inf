@@ -1,44 +1,24 @@
 import './App.css';
 import "./MainAppBar"
 import MainAppBar from "./MainAppBar";
-import {Button, Paper} from "@material-ui/core";
+import Main from "./Main";
+import {Component} from "react";
 
 
-function App() {
-  return (
-    <div className="App">
-      <div className="appbar">
+class App extends Component {
+  render() {
+    let showMain = true;
+    return (
+      <div className="App">
         <MainAppBar/>
+        <div className="container">
+          {showMain && (
+            <Main/>
+          )}
+        </div>
       </div>
-      <div className="container">
-        <Paper className="paper">
-          Подготовка по тематическим блокам
-          <div className="content">
-            <ul>
-              <li>Здесь может быть ваша реклама</li>
-              <li>Тут тоже</li>
-            </ul>
-          </div>
-          <Button variant="contained" color="primary">
-            Нажми меня
-          </Button>
-        </Paper>
-
-        <Paper className="paper">
-          Отработка знаний по вариантам ЕГЭ
-          <div className="content">
-            <ul>
-              <li>Здесь может быть ваша реклама</li>
-              <li>Тут тоже</li>
-            </ul>
-          </div>
-          <Button variant="contained" color="primary">
-            Нажми меня
-          </Button>
-        </Paper>
-      </div>
-    </div>
-  );
+    );
+  }
 }
 
 export default App;
