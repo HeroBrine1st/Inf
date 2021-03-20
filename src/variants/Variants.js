@@ -1,47 +1,68 @@
-import {Component} from "react";
+import {useEffect, useState} from "react";
 import "./Variants.css"
 import Loading from "../misc/Loading";
-import {withSnackbar} from "notistack";
+import {useSnackbar} from "notistack";
+import {Route, useRouteMatch, Switch} from "react-router";
+import {Link} from "react-router-dom";
+import {Chip, makeStyles, Typography} from "@material-ui/core";
 
-class Variants extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      loaded: false,
-      variants: [],
-    }
-    this.enqueueSnackbar = this.props.enqueueSnackbar
+const useStyles = makeStyles((theme) => ({
+  root: {
+    display: 'flex',
+    justifyContent: 'center',
+    flexWrap: 'wrap',
+
+    marginLeft: theme.spacing(16),
+    marginRight: theme.spacing(16),
+    '& > *': {
+      margin: theme.spacing(0.5),
+    },
+  },
+  text: {
+    marginTop: theme.spacing(4),
+    display: "flex",
+    justifyContent: 'center',
   }
+}));
 
-
-
-  componentDidMount() {
+function Variants() {
+  let [variants, setVariants] = useState([])
+  const {enqueueSnackbar} = useSnackbar()
+  let {path, url} = useRouteMatch()
+  const classes = useStyles()
+  useEffect(() => {
     fetch("/variants.json")
       .then(it => it.json())
       .then(it => {
-        this.setState({
-          loaded: true,
-          variants: it
-        })
-      },
-      error => {
-        console.log(error)
-        this.enqueueSnackbar("Произошла ошибка при получении данных", {variant: "error"})
-      }
-    )
-  }
+          setVariants(it)
+        },
+        error => {
+          console.error(error)
+          enqueueSnackbar("Произошла ошибка при получении данных", {variant: "error"})
+        }
+      )
+  })
 
-  render() {
+  return <div>
+    <Loading open={variants.length === 0}/>
+    <Switch>
+      <Route exact path={path}>
+        <div className={classes.text}>
+          <Typography variant="h6">Выберите вариант</Typography>
+        </div>
+        <div className={classes.root}>
+          {variants.length > 0 && variants.map(it => (
+            <Chip label={it.name} component={Link} to={`${url}/${it.id}`} clickable color="primary"/>
+          ))}
+        </div>
 
-    return <div>
-      <Loading open={!this.state.loaded}/>
-      {this.state.loaded &&
-        this.state.variants.map(it => {
 
-        })
-      }
-    </div>
-  }
+      </Route>
+      <Route path={`${path}/:variantId`}>
+        {/*<Variant/>*/}
+      </Route>
+    </Switch>
+  </div>
 }
 
-export default withSnackbar(Variants)
+export default Variants
