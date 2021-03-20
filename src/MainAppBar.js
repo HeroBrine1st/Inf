@@ -28,7 +28,7 @@ const useStyles = makeStyles((theme) => ({
 function MainAppBar() {
   const classes = useStyles();
   const [drawer, setDrawer] = React.useState(false);
-  return [
+  return <div>
     <div className={classes.appBar}>
       <HideOnScroll>
         <AppBar>
@@ -44,9 +44,9 @@ function MainAppBar() {
         </AppBar>
       </HideOnScroll>
       <Toolbar/>
-    </div>,
+    </div>
     <NavigationDrawer open={drawer} onClose={() => setDrawer(false)}/>
-  ];
+  </div>
 }
 
 export default MainAppBar
