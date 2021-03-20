@@ -5,11 +5,10 @@ import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import HideOnScroll from "./utils/HideOnScroll";
-import {Drawer, List, ListItem, ListItemIcon, ListItemText, makeStyles} from "@material-ui/core";
-import "./MainAppBar.css"
-import InboxIcon from '@material-ui/icons/Inbox';
+import {makeStyles} from "@material-ui/core";
+
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
-import NavigationDrawer from "../NavigationDrawer";
+import NavigationDrawer from "./NavigationDrawer";
 
 // В CSS эту хуйню не вывести :/
 const useStyles = makeStyles((theme) => ({
@@ -46,8 +45,9 @@ function MainAppBar() {
       </HideOnScroll>
       <Toolbar/>
     </div>
-    <NavigationDrawer/>
+    <NavigationDrawer open={drawer} onClose={() => setDrawer(false)}/>
   </div>;
 }
+
 
 export default MainAppBar
