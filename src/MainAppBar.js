@@ -9,6 +9,7 @@ import {Drawer, List, ListItem, ListItemIcon, ListItemText, makeStyles} from "@m
 import "./MainAppBar.css"
 import InboxIcon from '@material-ui/icons/Inbox';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
+import NavigationDrawer from "../NavigationDrawer";
 
 // В CSS эту хуйню не вывести :/
 const useStyles = makeStyles((theme) => ({
@@ -44,22 +45,8 @@ function MainAppBar() {
         </AppBar>
       </HideOnScroll>
       <Toolbar/>
-      <Drawer anchor="left" variant="temporary" open={drawer} onClose={() => setDrawer(false)}>
-        <Toolbar/> {/*Костыль, чтобы тулбар не перекрывал дравер*/}
-        <List className="navDrawerList">
-          <ListItem button>
-            <ListItemIcon>
-              <InboxIcon/>
-            </ListItemIcon>
-            <ListItemText>Inbox</ListItemText>
-          </ListItem>
-        </List>
-        <div className="navDrawerFooter">
-          Все права защищены блять, закрой нахуй, дует
-        </div>
-      </Drawer>
     </div>
-
+    <NavigationDrawer/>
   </div>;
 }
 
