@@ -5,10 +5,10 @@ import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import HideOnScroll from "./utils/HideOnScroll";
-import {Drawer, List, ListItem, ListItemIcon, ListItemText, makeStyles} from "@material-ui/core";
-import "./MainAppBar.css"
-import InboxIcon from '@material-ui/icons/Inbox';
+import {makeStyles} from "@material-ui/core";
+
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
+import NavigationDrawer from "./NavigationDrawer";
 
 // В CSS эту хуйню не вывести :/
 const useStyles = makeStyles((theme) => ({
@@ -28,7 +28,7 @@ const useStyles = makeStyles((theme) => ({
 function MainAppBar() {
   const classes = useStyles();
   const [drawer, setDrawer] = React.useState(false);
-  return <div>
+  return [
     <div className={classes.appBar}>
       <HideOnScroll>
         <AppBar>
@@ -44,23 +44,9 @@ function MainAppBar() {
         </AppBar>
       </HideOnScroll>
       <Toolbar/>
-      <Drawer anchor="left" variant="temporary" open={drawer} onClose={() => setDrawer(false)}>
-        <Toolbar/> {/*Костыль, чтобы тулбар не перекрывал дравер*/}
-        <List className="navDrawerList">
-          <ListItem button>
-            <ListItemIcon>
-              <InboxIcon/>
-            </ListItemIcon>
-            <ListItemText>Inbox</ListItemText>
-          </ListItem>
-        </List>
-        <div className="navDrawerFooter">
-          Все права защищены блять, закрой нахуй, дует
-        </div>
-      </Drawer>
-    </div>
-
-  </div>;
+    </div>,
+    <NavigationDrawer open={drawer} onClose={() => setDrawer(false)}/>
+  ];
 }
 
 export default MainAppBar
