@@ -1,5 +1,7 @@
 import {Button, Paper} from "@material-ui/core";
 import "./Main.css"
+import {Link} from "react-router-dom";
+
 function Main() {
   return (
     <div className="mainPage">
@@ -11,6 +13,7 @@ function Main() {
             <li>Тут тоже</li>
           </ul>
         </div>
+
         <Button variant="outlined" color="primary">
           Нажми меня
         </Button>
@@ -24,9 +27,11 @@ function Main() {
             <li>Тут тоже</li>
           </ul>
         </div>
-        <Button variant="outlined" color="primary">
-          Нажми меня
-        </Button>
+        <Link to="/variants">
+          <Button variant="outlined" color="primary">
+            Нажми меня
+          </Button>
+        </Link>
       </Paper>
     </div>
   )
