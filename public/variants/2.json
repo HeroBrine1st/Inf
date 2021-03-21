@@ -1,12 +1,14 @@
 {
-  "tasks":[
+  "id": 2,
+  "name": "Вариант 2",
+  "tasks": [
     {
-      "id": 4,
-      "description": "2 Test"
+      "id": 1,
+      "task": "2 Test"
     },
     {
-      "id": 4,
-      "description": "2 Test2"
+      "id": 2,
+      "task": "2 Test2"
     }
   ]
 }

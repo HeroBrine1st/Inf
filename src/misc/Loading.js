@@ -12,7 +12,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Loading(props) {
   const classes = useStyles()
-  return <Backdrop className={classes.backdrop} open={props.open}>
+  return <Backdrop className={classes.backdrop} open={props.open} transitionDuration={300}>
     <CircularProgress color="inherit" />
   </Backdrop>;
 }

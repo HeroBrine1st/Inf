@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function MainAppBar() {
+function MainAppBar(props) {
   const classes = useStyles();
   const [drawer, setDrawer] = React.useState(false);
   return <div>
@@ -38,7 +38,7 @@ function MainAppBar() {
               {drawer ? (<ArrowBackIcon/>) : (<MenuIcon/>)}
             </IconButton>
             <Typography variant="h6" className={classes.title}>
-              Информатика
+              {props.title}
             </Typography>
           </Toolbar>
         </AppBar>

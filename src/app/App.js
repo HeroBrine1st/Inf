@@ -2,32 +2,36 @@ import './App.css';
 import "../misc/MainAppBar"
 import MainAppBar from "../misc/MainAppBar";
 import Main from "../main/Main";
-import {Component} from "react";
 import {Route, BrowserRouter, Switch} from "react-router-dom"
 import Variants from "../variants/Variants";
 import {SnackbarProvider} from "notistack";
+import {useState} from "react";
 
 
-class App extends Component {
-  render() {
-    return <SnackbarProvider maxSnack={3}>
-      <BrowserRouter>
-        <div className="App">
-          <MainAppBar/>
-          <div className="container">
-            <Switch>
-              <Route exact path="/">
-                <Main/>
-              </Route>
-              <Route path="/variants/">
-                <Variants/>
-              </Route>
-            </Switch>
-          </div>
+function App() {
+  const [title, setTitle] = useState("Информатика")
+  const resetTitle = () => {
+    setTitle("Информатика")
+  };
+  document.title = title
+  return <SnackbarProvider maxSnack={3}>
+    <BrowserRouter>
+      <div className="App">
+        <MainAppBar title={title}/>
+        <div className="container">
+          <Switch>
+            <Route exact path="/">
+              <Main/>
+            </Route>
+            <Route path="/variants/">
+              <Variants setTitle={setTitle} resetTitle={resetTitle}/>
+            </Route>
+          </Switch>
         </div>
-      </BrowserRouter>
-    </SnackbarProvider>;
-  }
+      </div>
+    </BrowserRouter>
+  </SnackbarProvider>;
 }
+
 
 export default App;
