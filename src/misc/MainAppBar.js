@@ -43,7 +43,7 @@ function MainAppBar(props) {
           </Toolbar>
         </AppBar>
       </HideOnScroll>
-      <Toolbar/>
+
     </div>
     <NavigationDrawer open={drawer} onClose={() => setDrawer(false)}/>
   </div>;

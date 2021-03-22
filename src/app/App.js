@@ -7,6 +7,7 @@ import Variants from "../variants/Variants";
 import {SnackbarProvider} from "notistack";
 import {useState} from "react";
 import {Redirect} from "react-router";
+import {Toolbar} from "@material-ui/core";
 
 function App() {
   const [title, setTitle] = useState("Информатика")
@@ -19,6 +20,7 @@ function App() {
       <div className="App">
         <MainAppBar title={title}/>
         <div className="container">
+          <Toolbar/>
           <Switch>
             <Route exact path="/">
               <Main/>

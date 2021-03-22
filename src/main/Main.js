@@ -9,14 +9,16 @@ const useStyles = makeStyles((theme) => ({
     [theme.breakpoints.up("lg")]: {
       display: "flex",
       flexDirection: "row",
+      top: "50%",
+      left: "50%",
+      transform: "translate(-50%, -50%)",
+      position: "fixed",
+      justifyContent: "center",
     },
     alignItems: "stretch",
-    justifyContent: "center",
+
     color: "white",
-    top: "50%",
-    left: "50%",
-    transform: "translate(-50%, -50%)",
-    position: "fixed",
+
   },
 }))
 

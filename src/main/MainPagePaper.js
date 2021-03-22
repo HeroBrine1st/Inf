@@ -25,7 +25,12 @@ const useStyles = makeStyles((theme) => ({
     textAlign: "left",
     flexGrow: "1",
   },
-  button: {}
+  button: {},
+  ul: {
+    [theme.breakpoints.down("lg")]: {
+      padding: theme.spacing(2),
+    }
+  }
 }))
 
 function MainPagePaper(props) {
@@ -34,7 +39,7 @@ function MainPagePaper(props) {
     <Paper className={classes.paper}>
       <Typography variant="h5">{props.children}</Typography>
       <div className={classes.paperContent}>
-        <ul>
+        <ul className={classes.ul}>
           {props.items.map((it, index) => (
             <li key={index}><Typography variant="body2">{it}</Typography></li>
           ))}
