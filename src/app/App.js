@@ -6,7 +6,7 @@ import {Route, BrowserRouter, Switch} from "react-router-dom"
 import Variants from "../variants/Variants";
 import {SnackbarProvider} from "notistack";
 import {useState} from "react";
-
+import {Redirect} from "react-router";
 
 function App() {
   const [title, setTitle] = useState("Информатика")
@@ -25,6 +25,9 @@ function App() {
             </Route>
             <Route path="/variants/">
               <Variants setTitle={setTitle} resetTitle={resetTitle}/>
+            </Route>
+            <Route path="*"> {/*404*/}
+              <Redirect to="/"/>
             </Route>
           </Switch>
         </div>
