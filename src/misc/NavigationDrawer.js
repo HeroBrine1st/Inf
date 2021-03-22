@@ -1,7 +1,6 @@
 import {Drawer, List, ListItem, ListItemText, Link as MLink, makeStyles} from "@material-ui/core";
 import Toolbar from "@material-ui/core/Toolbar";
 import React from "react";
-import "./NavigationDrawer.css"
 import PropTypes from "prop-types";
 import {Link as RLink} from "react-router-dom";
 import Typography from "@material-ui/core/Typography";

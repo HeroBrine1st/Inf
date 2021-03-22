@@ -1,5 +1,4 @@
 import {useEffect, useState} from "react";
-import "./Variants.css"
 import Loading from "../misc/Loading";
 import {useSnackbar} from "notistack";
 import {Route, useRouteMatch, Switch} from "react-router";
@@ -15,7 +14,6 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     justifyContent: 'center',
     flexWrap: 'wrap',
-
     marginLeft: theme.spacing(16),
     marginRight: theme.spacing(16),
     '& > *': {

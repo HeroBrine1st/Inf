@@ -83,9 +83,7 @@ function Variant(props) {
         </AccordionActions>
       </Accordion>
     ))}
-    <SolutionDialog open={dialog} onClose={() => openDialog(false)} solution={dialogContent}>
-
-    </SolutionDialog>
+    <SolutionDialog open={dialog} onClose={() => openDialog(false)} solution={dialogContent}/>
   </div>
 }
 
