@@ -5,9 +5,11 @@ import {Link} from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    flexGrow: "1"
+    display: "flex",
+    flexDirection: "column",
   },
   paper: {
+    flexGrow: "1",
     display: "flex",
     flexDirection: "column",
     flexWrap: "wrap",
