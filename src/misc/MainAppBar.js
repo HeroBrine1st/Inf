@@ -9,6 +9,7 @@ import {makeStyles} from "@material-ui/core";
 
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import NavigationDrawer from "./NavigationDrawer";
+import {Link} from "react-router-dom";
 
 // В CSS эту хуйню не вывести :/
 const useStyles = makeStyles((theme) => ({
@@ -22,6 +23,12 @@ const useStyles = makeStyles((theme) => ({
   },
   title: {
     margin: "right",
+    color: "white",
+    textDecoration: "none",
+    outline: "0",
+    '&:hover': {
+      color: "white",
+    },
   },
 }));
 
@@ -37,7 +44,7 @@ function MainAppBar(props) {
                         onClick={() => setDrawer(!drawer)}>
               {drawer ? (<ArrowBackIcon/>) : (<MenuIcon/>)}
             </IconButton>
-            <Typography variant="h6" className={classes.title}>
+            <Typography variant="h6" className={classes.title} component={Link} to="/" unselectable>
               {props.title}
             </Typography>
           </Toolbar>

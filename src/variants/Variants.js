@@ -11,11 +11,12 @@ const useStyles = makeStyles((theme) => ({
     alignContent: "center",
   },
   selector: {
-    display: 'flex',
-    justifyContent: 'center',
-    flexWrap: 'wrap',
-    marginLeft: theme.spacing(16),
-    marginRight: theme.spacing(16),
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "center",
+    flexWrap: "wrap",
+    marginLeft: "15%",
+    marginRight: "15%",
     '& > *': {
       margin: theme.spacing(0.5),
     },
