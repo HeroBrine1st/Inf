@@ -16,7 +16,6 @@ const useStyles = makeStyles((theme) => ({
     flexWrap: "wrap",
     alignSelf: "center",
     textAlign: "center",
-    // justifyContent: "center",
     margin: "5%",
     padding: theme.spacing(1),
   },

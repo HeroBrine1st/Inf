@@ -14,12 +14,12 @@ import {Link} from "react-router-dom";
 // В CSS эту хуйню не вывести :/
 const useStyles = makeStyles((theme) => ({
   appBar: {
-    flexGrow: 1,
+    flexGrow: 1, // TODO кажись юзлесс
     position: 'relative', // Чтобы дравер открывался под тулбаром
     zIndex: 1400, // Это тоже
   },
   menuButton: {
-    marginRight: theme.spacing(2),
+    marginRight: theme.spacing(2), // Чтобы текст после кноп очки лежал как надо
   },
   title: {
     margin: "right",
@@ -44,7 +44,7 @@ function MainAppBar(props) {
                         onClick={() => setDrawer(!drawer)}>
               {drawer ? (<ArrowBackIcon/>) : (<MenuIcon/>)}
             </IconButton>
-            <Typography variant="h6" className={classes.title} component={Link} to="/" unselectable>
+            <Typography variant="h6" className={classes.title} component={Link} to="/">
               {props.title}
             </Typography>
           </Toolbar>
