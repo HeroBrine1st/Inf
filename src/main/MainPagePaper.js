@@ -20,7 +20,6 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(1),
   },
   paperContent: {
-    fontSize: "calc(4px + 1.5vmin)",
     textAlign: "left",
     flexGrow: "1",
   },
