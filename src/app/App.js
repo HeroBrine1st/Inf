@@ -23,12 +23,13 @@ const useStyles = makeStyles((theme) => ({
     margin: "auto",
     textAlign: "left",
     backgroundColor: "#DFDFDF",
+    [theme.breakpoints.down("lg")]: {
+      width: "100%",
+    },
     [theme.breakpoints.up("lg")]: {
       width: "75%",
     },
-    [theme.breakpoints.down("lg")]: {
-      width: "100%",
-    }
+
   },
 }))
 
