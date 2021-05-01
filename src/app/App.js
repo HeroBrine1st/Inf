@@ -1,10 +1,10 @@
 import MainAppBar from "../misc/MainAppBar";
 import Main from "../main/Main";
-import {Route, BrowserRouter, Switch} from "react-router-dom"
+import {BrowserRouter} from "react-router-dom"
+import {Route, Switch, Redirect} from "react-router"
 import Variants from "../variants/Variants";
 import {SnackbarProvider} from "notistack";
 import {useEffect, useState} from "react";
-import {Redirect} from "react-router";
 import {makeStyles} from "@material-ui/core/styles";
 
 const useStyles = makeStyles((theme) => ({

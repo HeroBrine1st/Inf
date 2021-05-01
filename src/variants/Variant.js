@@ -47,6 +47,9 @@ function Variant(props) {
   }, [enqueueSnackbar, variantId])
 
   useEffect(() => {
+    if(name === undefined) {
+      return
+    }
     props.setTitle(name)
     return () => {
       props.resetTitle()
