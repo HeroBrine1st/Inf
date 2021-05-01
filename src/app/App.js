@@ -3,7 +3,7 @@ import Main from "../main/Main";
 import {Route, BrowserRouter, Switch} from "react-router-dom"
 import Variants from "../variants/Variants";
 import {SnackbarProvider} from "notistack";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {Redirect} from "react-router";
 import {makeStyles} from "@material-ui/core/styles";
 
@@ -38,7 +38,9 @@ function App() {
   const resetTitle = () => {
     setTitle("Информатика")
   };
-  document.title = title
+  useEffect(() => {
+    document.title = title;
+  }, [title])
   return <SnackbarProvider maxSnack={3}>
     <BrowserRouter>
       <div className={classes.app}>
