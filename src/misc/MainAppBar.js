@@ -6,12 +6,10 @@ import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import HideOnScroll from "./HideOnScroll";
 import {makeStyles} from "@material-ui/core";
-
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import NavigationDrawer from "./NavigationDrawer";
 import {Link} from "react-router-dom";
 
-// В CSS эту хуйню не вывести :/
 const useStyles = makeStyles((theme) => ({
   appBar: {
     flexGrow: 1, // TODO кажись юзлесс
@@ -50,8 +48,8 @@ function MainAppBar(props) {
           </Toolbar>
         </AppBar>
       </HideOnScroll>
-
     </div>
+    <Toolbar/>
     <NavigationDrawer open={drawer} onClose={() => setDrawer(false)}/>
   </div>;
 }

@@ -5,7 +5,6 @@ import Variants from "../variants/Variants";
 import {SnackbarProvider} from "notistack";
 import {useState} from "react";
 import {Redirect} from "react-router";
-import {Toolbar} from "@material-ui/core";
 import {makeStyles} from "@material-ui/core/styles";
 
 const useStyles = makeStyles((theme) => ({
@@ -45,7 +44,7 @@ function App() {
       <div className={classes.app}>
         <MainAppBar title={title}/>
         <div className={classes.container}>
-          <Toolbar/>
+
           <Switch>
             <Route exact path="/">
               <Main/>
