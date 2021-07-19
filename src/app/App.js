@@ -1,4 +1,4 @@
-import MainAppBar from "../misc/MainAppBar";
+import MainAppBar from "./MainAppBar";
 import Main from "../main/Main";
 import {BrowserRouter} from "react-router-dom"
 import {Route, Switch, Redirect} from "react-router"

@@ -33,7 +33,7 @@ function Variant(props) {
   const [name, setName] = useState()
   const classes = useStyles()
   useEffect(() => {
-    fetch(`/variants/${variantId}.json`)
+    fetch(`${process.env.REACT_APP_API_ROOT}/variants/${variantId}`)
       .then(it => it.json())
       .then(it => {
           setTasks(it["tasks"])
@@ -72,15 +72,15 @@ function Variant(props) {
                           expandIcon={<ExpandMoreIcon/>}
                           aria-controls="panel1a-content"
                           id="panel1a-header">
-          <Typography className={classes.heading}>{`Задание №${index + 1}`}</Typography>
-          <Typography className={classes.secondaryHeading}>А тут типа тема будет</Typography>
+          <Typography className={classes.heading}>{`Задание №${it["number"]}`}</Typography>
+          <Typography className={classes.secondaryHeading}>{it["subtheme"]["name"]}</Typography>
         </AccordionSummary>
         <AccordionDetails>
-          <Typography variant="subtitle1">{it["task"]}</Typography>
+          <Typography variant="subtitle1">{it["content"]}</Typography>
         </AccordionDetails>
         <AccordionActions>
           <Button variant="outlined" color="secondary" onClick={() => {
-            setDialogContent("Тут типа решение будет. Еще какой-то текст чтобы протестировать размер окна. Это обязательно нужно сделать, пока я не написал бекенд, ведь иначе я получу кучу багов после того, как напишу его.")
+            setDialogContent(it["solution"])
             openDialog(true)
           }}>Решение</Button>
         </AccordionActions>

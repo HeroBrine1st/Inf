@@ -34,7 +34,7 @@ function Variants(props) {
   let {path, url} = useRouteMatch()
   const classes = useStyles()
   useEffect(() => {
-    fetch("/variants.json")
+    fetch(process.env.REACT_APP_API_ROOT + "/variants/")
       .then(it => it.json())
       .then(it => {
           setVariants(it)

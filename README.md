@@ -1,12 +1,3 @@
-# Inf
-Это типа сайт для подготовки к ЕГЭ, ну знаете, популярные такие сайты.
-
-Ну а это короче типа мой сайт, ну знаете. Типа в школе на такую тему проект утвердил, вот и делаю.
-
-Потом надо будет описать на 21 странице, что такое HTML, JS и CSS.
-
-И историю интернета туда же.
-
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).

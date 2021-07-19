@@ -4,7 +4,7 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
-import HideOnScroll from "./HideOnScroll";
+import HideOnScroll from "../misc/HideOnScroll";
 import {makeStyles} from "@material-ui/core";
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import NavigationDrawer from "./NavigationDrawer";
@@ -13,11 +13,11 @@ import {Link} from "react-router-dom";
 const useStyles = makeStyles((theme) => ({
   appBar: {
     flexGrow: 1, // TODO кажись юзлесс
-    position: 'relative', // Чтобы дравер открывался под тулбаром
-    zIndex: 1400, // Это тоже
+    // position: 'relative', // Чтобы дравер открывался под тулбаром
+    // zIndex: 1400, // Это тоже
   },
   menuButton: {
-    marginRight: theme.spacing(2), // Чтобы текст после кноп очки лежал как надо
+    marginRight: theme.spacing(1), // Чтобы текст после кноп очки лежал как надо
   },
   title: {
     margin: "right",
@@ -50,7 +50,7 @@ function MainAppBar(props) {
       </HideOnScroll>
     </div>
     <Toolbar/>
-    <NavigationDrawer open={drawer} onClose={() => setDrawer(false)}/>
+    <NavigationDrawer open={drawer} onClose={() => setDrawer(false)} title={props.title}/>
   </div>;
 }
 
