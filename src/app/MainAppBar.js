@@ -11,11 +11,6 @@ import NavigationDrawer from "./NavigationDrawer";
 import {Link} from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
-  appBar: {
-    flexGrow: 1, // TODO кажись юзлесс
-    // position: 'relative', // Чтобы дравер открывался под тулбаром
-    // zIndex: 1400, // Это тоже
-  },
   menuButton: {
     marginRight: theme.spacing(1), // Чтобы текст после кноп очки лежал как надо
   },

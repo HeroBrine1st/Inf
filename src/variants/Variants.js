@@ -29,12 +29,18 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function Variants(props) {
-  let [variants, setVariants] = useState([])
+  const [variants, setVariants] = useState([])
   const {enqueueSnackbar} = useSnackbar()
-  let {path, url} = useRouteMatch()
+  const {path, url} = useRouteMatch()
   const classes = useStyles()
   useEffect(() => {
-    fetch(process.env.REACT_APP_API_ROOT + "/variants/")
+    fetch(`${process.env.REACT_APP_API_ROOT}/variants/`)
+      .then(it => {
+        if(!it.ok) {
+          throw new Error(it.statusText)
+        }
+        return it;
+      })
       .then(it => it.json())
       .then(it => {
           setVariants(it)

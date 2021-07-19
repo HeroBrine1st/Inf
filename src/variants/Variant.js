@@ -1,4 +1,4 @@
-import {useParams} from "react-router";
+import {useHistory, useParams} from "react-router";
 import {useEffect, useState} from "react";
 import {useSnackbar} from "notistack";
 import Loading from "../misc/Loading";
@@ -31,20 +31,34 @@ function Variant(props) {
   const {enqueueSnackbar} = useSnackbar()
   const [tasks, setTasks] = useState([])
   const [name, setName] = useState()
+  const history = useHistory();
   const classes = useStyles()
   useEffect(() => {
     fetch(`${process.env.REACT_APP_API_ROOT}/variants/${variantId}`)
+      .then(it => {
+        if(!it.ok) {
+          history.push("/variants/")
+          console.error(it);
+          if(it.status === 404) {
+            enqueueSnackbar("Вариант не найден", {variant: "warning"})
+            throw new Error("404")
+          }
+          throw new Error(it.statusText)
+        }
+        return it;
+      })
       .then(it => it.json())
       .then(it => {
           setTasks(it["tasks"])
           setName(it["name"])
         },
         error => {
+          if(error.message === "404") return;
           console.error(error)
           enqueueSnackbar("Произошла ошибка при получении данных", {variant: "error"})
         }
       )
-  }, [enqueueSnackbar, variantId])
+  }, [enqueueSnackbar, variantId, history])
 
   useEffect(() => {
     if(name === undefined) {
