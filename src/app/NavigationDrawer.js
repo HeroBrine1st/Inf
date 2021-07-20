@@ -36,7 +36,7 @@ const useStyles = makeStyles((theme) => ({
 
 function NavigationDrawer(props) {
   const classes = useStyles()
-  return <Drawer anchor="left" variant="temporary" open={props.open} onClose={props.onClose}>
+  return <Drawer anchor="left" variant="temporary" open={props.open} onClose={props.onClose} hideBackdrop>
     <Toolbar>
       <IconButton edge="start" color="inherit" aria-label="menu" className={classes.menuButton}
                   onClick={props.onClose}>

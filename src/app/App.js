@@ -9,6 +9,7 @@ import React from "react";
 import {makeStyles} from "@material-ui/core/styles";
 import {Button} from "@material-ui/core";
 import PageNotFound from "./PageNotFound";
+import Themes from "../themes/Themes";
 
 const useStyles = makeStyles((theme) => ({
   app: {
@@ -62,6 +63,9 @@ function App() {
             </Route>
             <Route path="/variants/">
               <Variants setTitle={setTitle} resetTitle={resetTitle}/>
+            </Route>
+            <Route path="/themes/">
+              <Themes/>
             </Route>
             <Route path="*"> {/*404*/}
               <PageNotFound/>
