@@ -6,7 +6,7 @@ import {useSnackbar} from "notistack";
 import PropTypes from 'prop-types';
 import {useHistory} from "react-router";
 import {Done, Error as ErrorIcon} from "@material-ui/icons";
-import {Typography} from "@material-ui/core";
+import {LinearProgress, Typography} from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
   backdrop: {
@@ -16,9 +16,11 @@ const useStyles = makeStyles((theme) => ({
   backdropContent: {
     display: "block",
     textAlign: "center",
+    width: "100%",
   },
   nobackdrop: {
     margin: "0 auto",
+    width: "100%",
   }
 }));
 
@@ -28,12 +30,12 @@ const ERROR = -1;
 
 const transitionDuration = 300;
 
-function DownloadingJson({url, onError, onResult, quiet, children, description, nobackdrop}) {
+function DownloadingJson({url, onError, onResult, quiet, children, description, nobackdrop, linear}) {
   const [state, setState] = useState(LOADING);
   const {enqueueSnackbar} = useSnackbar()
   const history = useHistory()
   const classes = useStyles()
-
+  if(linear && !nobackdrop) throw new Error("linear can be used only with nobackdrop")
   useEffect(() => {
     fetch(url).then(async response => {
       if (!response.ok) {
@@ -67,7 +69,7 @@ function DownloadingJson({url, onError, onResult, quiet, children, description, 
       break;
     default:
       component = <>
-        <CircularProgress color="inherit"/>
+        {linear ? <LinearProgress color="primary"/> : <CircularProgress color="inherit"/>}
         {description && <Typography variant="h6">{description}</Typography>}
       </>
       break;
@@ -88,6 +90,7 @@ DownloadingJson.propTypes = {
   children: PropTypes.node,
   quiet: PropTypes.bool,
   nobackdrop: PropTypes.bool,
+  linear: PropTypes.bool,
   description: PropTypes.string,
 };
 
