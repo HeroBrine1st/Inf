@@ -54,7 +54,7 @@ function App() {
       <Button onClick={() => notistackRef.current.closeSnackbar(key)} className={classes.dismissButton}>Понятно</Button>)}>
     <BrowserRouter>
       <div className={classes.app}>
-        <MainAppBar title={title}/>
+        <MainAppBar title={title} navDrawerTitle={process.env.REACT_APP_TITLE}/>
         <div className={classes.container}>
           <Switch>
             <Route exact path="/">
