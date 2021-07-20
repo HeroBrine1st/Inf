@@ -1,6 +1,6 @@
 import {useCallback, useState} from "react";
 import {makeStyles} from "@material-ui/core/styles";
-import {Accordion, AccordionActions, AccordionSummary, Button} from "@material-ui/core";
+import {Accordion, AccordionActions, AccordionDetails, AccordionSummary, Button} from "@material-ui/core";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import Typography from "@material-ui/core/Typography";
 import SubthemeAccordionDetails from "./SubthemeAccordionDetails";
@@ -43,7 +43,9 @@ function Themes() {
                             id="panel1a-header">
             <Typography className={classes.heading}>{it.name}</Typography>
           </AccordionSummary>
-          <SubthemeAccordionDetails id={it.id}/>
+          <AccordionDetails>
+            <SubthemeAccordionDetails id={it.id}/>
+          </AccordionDetails>
           <AccordionActions>
             <Button variant="text" color="primary" onClick={() => {
               setExpanded(false)
