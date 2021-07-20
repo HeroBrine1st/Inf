@@ -34,6 +34,8 @@ function Variant(props) {
   const history = useHistory();
   const classes = useStyles()
   useEffect(() => {
+    setTasks([])
+    setName(undefined)
     fetch(`${process.env.REACT_APP_API_ROOT}/variants/${variantId}`)
       .then(it => {
         if(!it.ok) {

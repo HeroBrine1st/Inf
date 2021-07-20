@@ -16,7 +16,12 @@ const useStyles = makeStyles((theme) => ({
     flexWrap: "wrap",
     alignSelf: "center",
     textAlign: "center",
-    margin: "5%",
+    [theme.breakpoints.down("lg")]: { // Мобила
+      margin: theme.spacing(1),
+    },
+    [theme.breakpoints.up("lg")]: { // ПК
+      margin: "5%",
+    },
     padding: theme.spacing(1),
   },
   paperContent: {

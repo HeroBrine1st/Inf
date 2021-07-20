@@ -24,10 +24,10 @@ const useStyles = makeStyles((theme) => ({
     margin: "auto",
     textAlign: "left",
     backgroundColor: "#DFDFDF",
-    [theme.breakpoints.down("lg")]: {
+    [theme.breakpoints.down("lg")]: { // Мобила
       width: "100%",
     },
-    [theme.breakpoints.up("lg")]: {
+    [theme.breakpoints.up("lg")]: { // ПК
       width: "75%",
     },
   },
@@ -39,9 +39,9 @@ const useStyles = makeStyles((theme) => ({
 function App() {
   const classes = useStyles()
   const notistackRef = React.createRef();
-  const [title, setTitle] = useState("Информатика")
+  const [title, setTitle] = useState(() => `${process.env.REACT_APP_TITLE}`)
   const resetTitle = () => {
-    setTitle("Информатика")
+    setTitle(process.env.REACT_APP_TITLE)
   };
   useEffect(() => {
     document.title = title;

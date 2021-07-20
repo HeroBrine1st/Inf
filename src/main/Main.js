@@ -3,10 +3,10 @@ import MainPagePaper from "./MainPagePaper";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    [theme.breakpoints.down("lg")]: {
+    [theme.breakpoints.down("lg")]: { // Мобила
       display: "block",
     },
-    [theme.breakpoints.up("lg")]: {
+    [theme.breakpoints.up("lg")]: { // ПК
       display: "flex",
       flexDirection: "row",
       top: "50%",
@@ -14,11 +14,9 @@ const useStyles = makeStyles((theme) => ({
       transform: "translate(-50%, -50%)",
       position: "fixed",
       justifyContent: "center",
+      alignItems: "stretch",
     },
-    alignItems: "stretch",
-
     color: "white",
-
   },
 }))
 
