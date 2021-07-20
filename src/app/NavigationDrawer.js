@@ -1,4 +1,4 @@
-import {Drawer, List, ListItem, ListItemText, makeStyles} from "@material-ui/core";
+import {Drawer, List, ListItem, ListItemIcon, ListItemText, makeStyles} from "@material-ui/core";
 import Toolbar from "@material-ui/core/Toolbar";
 import React from "react";
 import PropTypes from "prop-types";
@@ -6,6 +6,7 @@ import {Link} from "react-router-dom";
 import Typography from "@material-ui/core/Typography";
 import IconButton from "@material-ui/core/IconButton";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
+import {LibraryBooks, School} from "@material-ui/icons";
 
 const useStyles = makeStyles((theme) => ({
   link: {
@@ -46,10 +47,12 @@ function NavigationDrawer(props) {
       </Typography>
     </Toolbar>
     <List className={classes.list} onClick={props.onClose}>
-      <ListItem button component={Link} to="/variants" divider key="1">
+      <ListItem button component={Link} to="/variants" key="1">
+        <ListItemIcon><School/></ListItemIcon>
         <ListItemText>По вариантам</ListItemText>
       </ListItem>
       <ListItem button component={Link} to="/blocks" divider key="2">
+        <ListItemIcon><LibraryBooks/></ListItemIcon>
         <ListItemText>По тематическим блокам</ListItemText>
       </ListItem>
     </List>
