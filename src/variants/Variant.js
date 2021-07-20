@@ -81,15 +81,15 @@ function Variant(props) {
 
   return <div className={classes.root}>
     <Loading open={tasks.length === 0}/>
-    <Typography variant="h6">Список заданий:</Typography>
-    {tasks.length > 0 && tasks.map((it, index) => (
+    {tasks.length !== 0 && <Typography variant="h6">Список заданий:</Typography>}
+    {tasks.length > 0 && tasks.sort((a, b) => a.number - b.number).map((it, index) => (
       <Accordion expanded={expanded === index} onChange={handleChange(index)}>
         <AccordionSummary key={it["id"]}
                           expandIcon={<ExpandMoreIcon/>}
                           aria-controls="panel1a-content"
                           id="panel1a-header">
-          <Typography className={classes.heading}>{`Задание №${it["number"]}`}</Typography>
-          <Typography className={classes.secondaryHeading}>{it["subtheme"]["name"]}</Typography>
+          <Typography className={classes.heading}>{`Задание №${it.number}`}</Typography>
+          <Typography className={classes.secondaryHeading}>{it["subtheme"].name}</Typography>
         </AccordionSummary>
         <AccordionDetails>
           <Typography variant="subtitle1">{it["content"]}</Typography>

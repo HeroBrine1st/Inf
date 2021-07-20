@@ -1,13 +1,14 @@
 import MainAppBar from "./MainAppBar";
 import Main from "../main/Main";
 import {BrowserRouter} from "react-router-dom"
-import {Route, Switch, Redirect} from "react-router"
+import {Route, Switch} from "react-router"
 import Variants from "../variants/Variants";
 import {SnackbarProvider} from "notistack";
 import {useEffect, useState} from "react";
 import React from "react";
 import {makeStyles} from "@material-ui/core/styles";
 import {Button} from "@material-ui/core";
+import PageNotFound from "./PageNotFound";
 
 const useStyles = makeStyles((theme) => ({
   app: {
@@ -46,13 +47,11 @@ function App() {
   useEffect(() => {
     document.title = title;
   }, [title])
-  const onClickDismiss = key => () => {
-    notistackRef.current.closeSnackbar(key);
-  }
   return <SnackbarProvider
     ref={notistackRef}
     maxSnack={3}
-    action={(key) => (<Button onClick={onClickDismiss(key)} className={classes.dismissButton}>Ок</Button>)}>
+    action={(key) => (
+      <Button onClick={() => notistackRef.current.closeSnackbar(key)} className={classes.dismissButton}>Ок</Button>)}>
     <BrowserRouter>
       <div className={classes.app}>
         <MainAppBar title={title}/>
@@ -65,7 +64,7 @@ function App() {
               <Variants setTitle={setTitle} resetTitle={resetTitle}/>
             </Route>
             <Route path="*"> {/*404*/}
-              <Redirect to="/"/>
+              <PageNotFound/>
             </Route>
           </Switch>
         </div>
