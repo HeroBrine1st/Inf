@@ -5,6 +5,7 @@ import {Chip, makeStyles, Typography} from "@material-ui/core";
 import Variant from "./Variant"
 import join from "../utils/join"
 import DownloadingJson from "../misc/DownloadingJson";
+
 const useStyles = makeStyles((theme) => ({
   root: {
     alignContent: "center",
@@ -33,9 +34,11 @@ function Variants(props) {
   const classes = useStyles()
 
   return <div className={classes.root}>
-    <DownloadingJson onResult={useCallback(it => setVariants(it), [])} url={`${process.env.REACT_APP_API_ROOT}/variants/`}>
-      <Switch>
-        <Route exact path={path}>
+
+    <Switch>
+      <Route exact path={path}>
+        <DownloadingJson onResult={useCallback(it => setVariants(it), [])}
+                         url={`${process.env.REACT_APP_API_ROOT}/variants/`}>
           <div className={classes.text}>
             <Typography variant="h6">Выберите вариант</Typography>
           </div>
@@ -44,12 +47,13 @@ function Variants(props) {
               <Chip label={it.name} component={Link} to={join(url, it.id)} clickable color="primary" key={it.id}/>
             ))}
           </div>
-        </Route>
-        <Route path={join(path,":variantId")}>
-          <Variant setTitle={props.setTitle} resetTitle={props.resetTitle}/>
-        </Route>
-      </Switch>
-    </DownloadingJson>
+        </DownloadingJson>
+      </Route>
+      <Route path={join(path, ":variantId")}>
+        <Variant setTitle={props.setTitle} resetTitle={props.resetTitle}/>
+      </Route>
+    </Switch>
+
   </div>
 }
 
