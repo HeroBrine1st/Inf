@@ -10,14 +10,24 @@ import SolutionDialog from "./SolutionDialog";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    width: "75%",
+    [theme.breakpoints.down("lg")]: { // Мобила
+      width: "95%",
+    },
+    [theme.breakpoints.up("lg")]: { // ПК
+      width: "75%",
+    },
     alignSelf: "center",
     margin: "auto",
     marginTop: theme.spacing(4),
   },
   heading: {
     fontSize: theme.typography.pxToRem(15),
-    flexBasis: '40%',
+    [theme.breakpoints.down("lg")]: { // Мобила
+      flexBasis: "40%",
+    },
+    [theme.breakpoints.up("lg")]: { // ПК
+      flexBasis: "33.33%",
+    },
     flexShrink: 0,
   },
   secondaryHeading: {
