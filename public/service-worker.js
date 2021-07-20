@@ -38,16 +38,8 @@ self.addEventListener('install', function(event) {
               const urlsToCache = [
                 "/",
                 assets["main.js"],
-                "/variants.json" // TODO НЕ ЗАБУДЬ БЛЯТЬ ПОТОМ НОРМАЛЬНО ЭТО СДЕЛАТЬ С БЕКЕНДОМ
               ]
-              return fetch("/variants.json")
-                .then(response => response.json())
-                .then(variants => {
-                  variants.forEach(variant => {
-                    urlsToCache.push(`/variants/${variant["id"]}.json`)
-                  })
-                  return cache.addAll(urlsToCache).then(() => console.log("Cached", urlsToCache))
-                })
+              cache.addAll(urlsToCache).then(() => console.log("Cached", urlsToCache))
             })
         })
     );
