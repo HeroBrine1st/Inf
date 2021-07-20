@@ -14,7 +14,7 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   list: {
-    width: theme.spacing(31.25),
+    width: theme.spacing(35),
   },
   footer: {
     position: "absolute",
