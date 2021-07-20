@@ -8,7 +8,7 @@ import {
 } from "@material-ui/core";
 
 function SolutionDialog(props) {
-  return <Dialog open={props.open} onClose={props.onClose}>
+  return <Dialog open={props.open} onClose={props.onClose} fullWidth>
     <DialogTitle>
       Решение
     </DialogTitle>
