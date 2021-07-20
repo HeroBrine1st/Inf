@@ -51,7 +51,7 @@ function App() {
     ref={notistackRef}
     maxSnack={3}
     action={(key) => (
-      <Button onClick={() => notistackRef.current.closeSnackbar(key)} className={classes.dismissButton}>Ок</Button>)}>
+      <Button onClick={() => notistackRef.current.closeSnackbar(key)} className={classes.dismissButton}>Понятно</Button>)}>
     <BrowserRouter>
       <div className={classes.app}>
         <MainAppBar title={title}/>
