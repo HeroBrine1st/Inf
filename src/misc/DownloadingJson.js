@@ -16,35 +16,37 @@ const useStyles = makeStyles((theme) => ({
   backdropContent: {
     display: "block",
     textAlign: "center",
+  },
+  nobackdrop: {
+    margin: "0 auto",
   }
 }));
 
+const LOADING = 0;
+const COMPLETED = 1;
+const ERROR = -1;
+
 const transitionDuration = 300;
 
-function DownloadingJson(props) {
-  const [loaded, setLoaded] = useState(false); // Скачано
-  const [completed, setCompleted] = useState(false); // Обработано
-  const [error, setError] = useState(false); // Ошибка
+function DownloadingJson({url, onError, onResult, quiet, children, description, nobackdrop}) {
+  const [state, setState] = useState(LOADING);
   const {enqueueSnackbar} = useSnackbar()
   const history = useHistory()
   const classes = useStyles()
-  const {url, onError, onResult, quiet} = props;
 
   useEffect(() => {
-    console.log("Start downloading")
     fetch(url).then(async response => {
       if (!response.ok) {
         if (response.status === 404) {
-          setError(true)
-          setTimeout(() => history.push("/404/"), transitionDuration*2)
+          setState(ERROR)
+          setTimeout(() => history.push("/404/"), transitionDuration * 2)
           return
         } else throw new Error(response.statusText)
       }
-      setLoaded(true)
       onResult(await response.json())
-      setCompleted(true)
+      setState(COMPLETED)
     }).catch(error => {
-      setError(true)
+      setState(ERROR)
       if (onError) {
         onError(error)
       }
@@ -52,18 +54,30 @@ function DownloadingJson(props) {
       console.error(error)
     })
   }, [url, quiet, enqueueSnackbar, onError, onResult, history])
-  let component = <CircularProgress color="inherit"/>
-  if(loaded) component = <Done fontSize="large"/>
-  if(error) component = <div className={classes.backdropContent}>
-    <ErrorIcon fontSize="large"/>
-    <Typography variant="h6">Произошла ошибка</Typography>
-  </div>
+  let component
+  switch (state) {
+    case COMPLETED:
+      component = <Done fontSize="large"/>
+      break;
+    case ERROR:
+      component = <>
+        <ErrorIcon fontSize="large"/>
+        <Typography variant="h6">Произошла ошибка</Typography>
+      </>
+      break;
+    default:
+      component = <>
+        <CircularProgress color="inherit"/>
+        {description && <Typography variant="h6">{description}</Typography>}
+      </>
+      break;
+  }
   return <>
-    {props.nobackdrop ? (!completed && component) :
-      <Backdrop className={classes.backdrop} open={!completed} transitionDuration={transitionDuration}>
-          {component}
+    {nobackdrop ? (state !== COMPLETED && <div className={classes.nobackdrop}>{component}</div>) :
+      <Backdrop className={classes.backdrop} open={state !== COMPLETED} transitionDuration={transitionDuration}>
+        <div className={classes.backdropContent}>{component}</div>
       </Backdrop>}
-    {loaded && props.children}
+    {state === COMPLETED && children}
   </>;
 }
 
@@ -73,7 +87,8 @@ DownloadingJson.propTypes = {
   url: PropTypes.string.isRequired,
   children: PropTypes.node,
   quiet: PropTypes.bool,
-  nobackdrop: PropTypes.bool
+  nobackdrop: PropTypes.bool,
+  description: PropTypes.string,
 };
 
 export default DownloadingJson;
