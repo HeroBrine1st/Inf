@@ -1,8 +1,8 @@
 import {Button, Paper} from "@material-ui/core";
 import Typography from "@material-ui/core/Typography";
 import {makeStyles} from "@material-ui/core/styles";
-import {Link} from "react-router-dom";
 import {NavigateNextRounded} from "@material-ui/icons";
+import {useHistory} from "react-router";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -38,6 +38,7 @@ const useStyles = makeStyles((theme) => ({
 
 function MainPagePaper(props) {
   const classes = useStyles()
+  const history = useHistory()
   return <div className={classes.root}>
     <Paper className={classes.paper}>
       <Typography variant="h5">{props.children}</Typography>
@@ -49,7 +50,9 @@ function MainPagePaper(props) {
         </ul>
       </div>
 
-      <Button variant="contained" color="primary" className={classes.button} component={Link} to={props.to}
+      <Button variant="contained" color="primary" className={classes.button}
+              // component={Link} to={props.to}
+              onClick={() => history.push(props.to)}
               endIcon={<NavigateNextRounded/>}>Перейти</Button>
     </Paper>
   </div>
