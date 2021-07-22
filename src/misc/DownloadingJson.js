@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import {makeStyles} from '@material-ui/core/styles';
 import Backdrop from "@material-ui/core/Backdrop";
 import CircularProgress from "@material-ui/core/CircularProgress";
@@ -31,11 +31,14 @@ const ERROR = -1;
 const transitionDuration = 300;
 
 function DownloadingJson({url, onError, onResult, quiet, children, description, nobackdrop, linear}) {
-  const [state, setState] = useState(LOADING);
+  const [state, setState] = useState(LOADING)
   const {enqueueSnackbar} = useSnackbar()
   const history = useHistory()
   const classes = useStyles()
-  if(linear && !nobackdrop) throw new Error("linear can be used only with nobackdrop")
+  const onResultRef = useRef()
+  const onErrorRef = useRef()
+  onResultRef.current = onResult
+  onErrorRef.current = onError
   useEffect(() => {
     fetch(url).then(async response => {
       if (!response.ok) {
@@ -45,17 +48,20 @@ function DownloadingJson({url, onError, onResult, quiet, children, description, 
           return
         } else throw new Error(response.statusText)
       }
-      onResult(await response.json())
+      onResultRef.current(await response.json())
       setState(COMPLETED)
     }).catch(error => {
       setState(ERROR)
-      if (onError) {
-        onError(error)
+      if (onErrorRef.current) {
+        onErrorRef.current(error)
       }
       if (!quiet) enqueueSnackbar("Произошла ошибка при получении данных", {variant: "error"})
       console.error(error)
     })
-  }, [url, quiet, enqueueSnackbar, onError, onResult, history])
+  }, [url, quiet, enqueueSnackbar, onErrorRef, onResultRef, history])
+  useEffect(() => {
+
+  })
   let component
   switch (state) {
     case COMPLETED:
@@ -69,7 +75,7 @@ function DownloadingJson({url, onError, onResult, quiet, children, description, 
       break;
     default:
       component = <>
-        {linear ? <LinearProgress color="primary"/> : <CircularProgress color="inherit"/>}
+        {linear ? <LinearProgress/> : <CircularProgress color="inherit"/>}
         {description && <Typography variant="h6">{description}</Typography>}
       </>
       break;

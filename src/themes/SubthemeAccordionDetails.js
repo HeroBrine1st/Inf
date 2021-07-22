@@ -1,5 +1,5 @@
 import DownloadingJson from "../misc/DownloadingJson";
-import {useCallback, useState} from "react";
+import {useState} from "react";
 import Typography from "@material-ui/core/Typography";
 import {Collapse} from "@material-ui/core";
 
@@ -15,10 +15,10 @@ function SubthemeAccordionDetails(props) {
   const [subthemes, setSubthemes] = useState([])
   const [collapseIn, setCollapseIn] = useState(false)
   return <DownloadingJson
-    onResult={useCallback(it => {
+    onResult={it => {
       setSubthemes(it)
       setTimeout(() => setCollapseIn(true), 0) // Костыль, но работает !
-    }, [])}
+    }}
     url={`${process.env.REACT_APP_API_ROOT}/themes/${props.id}/subthemes/`}
     nobackdrop linear>
     <Collapse in={collapseIn}>

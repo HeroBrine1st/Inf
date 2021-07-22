@@ -1,4 +1,4 @@
-import {useCallback, useState} from "react";
+import {useState} from "react";
 import {Route, useRouteMatch, Switch} from "react-router";
 import {Link} from "react-router-dom";
 import {Chip, makeStyles, Typography} from "@material-ui/core";
@@ -34,10 +34,9 @@ function Variants(props) {
   const classes = useStyles()
 
   return <div className={classes.root}>
-
     <Switch>
       <Route exact path={path}>
-        <DownloadingJson onResult={useCallback(it => setVariants(it), [])}
+        <DownloadingJson onResult={it => setVariants(it)}
                          url={`${process.env.REACT_APP_API_ROOT}/variants/`}>
           <div className={classes.text}>
             <Typography variant="h6">Выберите вариант</Typography>
@@ -53,7 +52,6 @@ function Variants(props) {
         <Variant setTitle={props.setTitle} resetTitle={props.resetTitle}/>
       </Route>
     </Switch>
-
   </div>
 }
 

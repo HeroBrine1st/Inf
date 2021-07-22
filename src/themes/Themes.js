@@ -1,4 +1,4 @@
-import {useCallback, useState} from "react";
+import {useState} from "react";
 import {makeStyles} from "@material-ui/core/styles";
 import {Accordion, AccordionActions, AccordionDetails, AccordionSummary, Button} from "@material-ui/core";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
@@ -32,7 +32,7 @@ function Themes() {
   const classes = useStyles()
 
   return <div className={classes.root}>
-    <DownloadingJson onResult={useCallback(it => setThemes(it), [])} url={`${process.env.REACT_APP_API_ROOT}/themes/`}>
+    <DownloadingJson onResult={it => setThemes(it)} url={`${process.env.REACT_APP_API_ROOT}/themes/`}>
       {themes.length > 0 && themes.map((it, index) => (
         <Accordion expanded={expanded === index} onChange={handleChange(index)} TransitionProps={{
           mountOnEnter: true,
