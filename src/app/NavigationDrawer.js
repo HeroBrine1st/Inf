@@ -6,7 +6,7 @@ import {Link} from "react-router-dom";
 import Typography from "@material-ui/core/Typography";
 import IconButton from "@material-ui/core/IconButton";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
-import {LibraryBooks, School} from "@material-ui/icons";
+import {Home, LibraryBooks, School} from "@material-ui/icons";
 
 const useStyles = makeStyles((theme) => ({
   link: {
@@ -47,13 +47,17 @@ function NavigationDrawer(props) {
       </Typography>
     </Toolbar>
     <List className={classes.list} onClick={props.onClose}>
-      <ListItem button component={Link} to="/variants" key="1">
+      <ListItem button component={Link} to="/" key="home">
+        <ListItemIcon><Home/></ListItemIcon>
+        <ListItemText>На главную страницу</ListItemText>
+      </ListItem>
+      <ListItem button component={Link} to="/variants" key="by-variants">
         <ListItemIcon><School/></ListItemIcon>
         <ListItemText>По вариантам</ListItemText>
       </ListItem>
-      <ListItem button component={Link} to="/blocks" divider key="2">
+      <ListItem button component={Link} to="/themes" divider key="by-themes">
         <ListItemIcon><LibraryBooks/></ListItemIcon>
-        <ListItemText>По тематическим блокам</ListItemText>
+        <ListItemText>По темам</ListItemText>
       </ListItem>
     </List>
 
