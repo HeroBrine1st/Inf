@@ -5,6 +5,7 @@ import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import Typography from "@material-ui/core/Typography";
 import SubthemeAccordionDetails from "./SubthemeAccordionDetails";
 import DownloadingJson from "../misc/DownloadingJson";
+import {Route, Switch, useRouteMatch} from "react-router";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -26,34 +27,39 @@ const useStyles = makeStyles((theme) => ({
 function Themes() {
   const [themes, setThemes] = useState([])
   const [expanded, setExpanded] = useState()
+  const {path} = useRouteMatch()
   const handleChange = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
   const classes = useStyles()
 
   return <div className={classes.root}>
-    <DownloadingJson onResult={it => setThemes(it)} url={`${process.env.REACT_APP_API_ROOT}/themes/`}>
-      {themes.length > 0 && themes.map((it, index) => (
-        <Accordion expanded={expanded === index} onChange={handleChange(index)} TransitionProps={{
-          mountOnEnter: true,
-        }} key={it.id}>
-          <AccordionSummary key={it.id}
-                            expandIcon={<ExpandMoreIcon/>}
-                            aria-controls="panel1a-content"
-                            id="panel1a-header">
-            <Typography className={classes.heading}>{it.name}</Typography>
-          </AccordionSummary>
-          <AccordionDetails>
-            <SubthemeAccordionDetails id={it.id}/>
-          </AccordionDetails>
-          <AccordionActions>
-            <Button variant="text" color="primary" onClick={() => {
-              setExpanded(false)
-            }}>Закрыть</Button>
-          </AccordionActions>
-        </Accordion>
-      ))}
-    </DownloadingJson>
+    <Switch>
+      <Route exact path={path}>
+        <DownloadingJson onResult={it => setThemes(it)} url={`${process.env.REACT_APP_API_ROOT}/themes/`}>
+          {themes.length > 0 && themes.map((it, index) => (
+            <Accordion expanded={expanded === index} onChange={handleChange(index)} TransitionProps={{
+              mountOnEnter: true,
+            }} key={it.id}>
+              <AccordionSummary key={it.id}
+                                expandIcon={<ExpandMoreIcon/>}
+                                aria-controls="panel1a-content"
+                                id="panel1a-header">
+                <Typography className={classes.heading}>{it.name}</Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                <SubthemeAccordionDetails id={it.id}/>
+              </AccordionDetails>
+              <AccordionActions>
+                <Button variant="text" color="primary" onClick={() => {
+                  setExpanded(false)
+                }}>Закрыть</Button>
+              </AccordionActions>
+            </Accordion>
+          ))}
+        </DownloadingJson>
+      </Route>
+    </Switch>
   </div>
 }
 

@@ -30,7 +30,7 @@ function SubthemeAccordionDetails(props) {
         {subthemes.map(it => (
           <li key={it.id}>
             <Typography variant="body2">
-              <Link to={join(url, it.id)}>{it.name}</Link> - {it["task_count"]} {pluralize(it["task_count"], "задание", "задания", "заданий")}
+              <Link to={join(url, props.id, "subthemes", it.id)}>{it.name}</Link> - {it["task_count"]} {pluralize(it["task_count"], "задание", "задания", "заданий")}
             </Typography>
           </li>
         ))}
