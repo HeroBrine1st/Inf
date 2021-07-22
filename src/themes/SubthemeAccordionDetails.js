@@ -2,6 +2,9 @@ import DownloadingJson from "../misc/DownloadingJson";
 import {useState} from "react";
 import Typography from "@material-ui/core/Typography";
 import {Collapse} from "@material-ui/core";
+import {Link} from "react-router-dom";
+import {useRouteMatch} from "react-router";
+import join from "../utils/join";
 
 
 function pluralize(number, a, b, c) {
@@ -14,19 +17,21 @@ function pluralize(number, a, b, c) {
 function SubthemeAccordionDetails(props) {
   const [subthemes, setSubthemes] = useState([])
   const [collapseIn, setCollapseIn] = useState(false)
+  const {url} = useRouteMatch()
   return <DownloadingJson
     onResult={it => {
       setSubthemes(it)
       setTimeout(() => setCollapseIn(true), 0) // Костыль, но работает !
     }}
     url={`${process.env.REACT_APP_API_ROOT}/themes/${props.id}/subthemes/`}
-    nobackdrop linear>
+    nobackdrop linear minDelay={250}>
     <Collapse in={collapseIn}>
       <ul>
         {subthemes.map(it => (
           <li key={it.id}>
-            <Typography
-              variant="body2">{it.name} - {it["task_count"]} {pluralize(it["task_count"], "задание", "задания", "заданий")}</Typography>
+            <Typography variant="body2">
+              <Link to={join(url, it.id)}>{it.name}</Link> - {it["task_count"]} {pluralize(it["task_count"], "задание", "задания", "заданий")}
+            </Typography>
           </li>
         ))}
       </ul>
