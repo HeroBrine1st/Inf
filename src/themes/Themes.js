@@ -6,6 +6,8 @@ import Typography from "@material-ui/core/Typography";
 import SubthemeAccordionDetails from "./SubthemeAccordionDetails";
 import DownloadingJson from "../misc/DownloadingJson";
 import {Route, Switch, useRouteMatch} from "react-router";
+import Subtheme from "./Subtheme";
+import join from "../utils/join";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -24,19 +26,21 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-function Themes() {
+function Themes(props) {
+  const classes = useStyles()
+  const {path} = useRouteMatch()
+
   const [themes, setThemes] = useState([])
   const [expanded, setExpanded] = useState()
-  const {path} = useRouteMatch()
+
   const handleChange = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
-  const classes = useStyles()
 
-  return <div className={classes.root}>
-    <Switch>
-      <Route exact path={path}>
-        <DownloadingJson onResult={it => setThemes(it)} url={`${process.env.REACT_APP_API_ROOT}/themes/`}>
+  return <Switch>
+    <Route exact path={path}>
+      <DownloadingJson onResult={it => setThemes(it)} url={`${process.env.REACT_APP_API_ROOT}/themes/`}>
+        <div className={classes.root}>
           {themes.length > 0 && themes.map((it, index) => (
             <Accordion expanded={expanded === index} onChange={handleChange(index)} TransitionProps={{
               mountOnEnter: true,
@@ -57,10 +61,14 @@ function Themes() {
               </AccordionActions>
             </Accordion>
           ))}
-        </DownloadingJson>
-      </Route>
-    </Switch>
-  </div>
+        </div>
+      </DownloadingJson>
+    </Route>
+    <Route path={join(path, ":themeId", "subthemes", ":subthemeId")}>
+      <Subtheme setTitle={props.setTitle} resetTitle={props.resetTitle}/>
+    </Route>
+  </Switch>
+
 }
 
 export default Themes;

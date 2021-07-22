@@ -65,7 +65,7 @@ function App() {
               <Variants setTitle={setTitle} resetTitle={resetTitle}/>
             </Route>
             <Route path="/themes/">
-              <Themes/>
+              <Themes setTitle={setTitle} resetTitle={resetTitle}/>
             </Route>
             <Route path="*"> {/*404*/}
               <PageNotFound/>
