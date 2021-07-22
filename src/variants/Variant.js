@@ -7,6 +7,7 @@ import Typography from "@material-ui/core/Typography";
 import SolutionDialog from "./SolutionDialog";
 import DownloadingJson from "../misc/DownloadingJson";
 import validatePositiveNumber from "../utils/validatePositiveNumber";
+import {Link} from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -75,7 +76,9 @@ function Variant(props) {
                             aria-controls="panel1a-content"
                             id="panel1a-header">
             <Typography className={classes.heading}>Задание №{it.number}</Typography>
-            <Typography className={classes.secondaryHeading}>{it["subtheme"].name}</Typography>
+            <Typography className={classes.secondaryHeading}>
+              {it["subtheme"].name} (<Link to={`/themes/${it["subtheme"]["theme_id"]}/subthemes/${it["subtheme"].id}`}>#{it["subtheme"].id}</Link>)
+            </Typography>
           </AccordionSummary>
           <AccordionDetails>
             <Typography variant="subtitle1">{it["content"]}</Typography>
