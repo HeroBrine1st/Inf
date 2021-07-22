@@ -76,9 +76,10 @@ function Subtheme(props) {
     }, [])}
     url={`${process.env.REACT_APP_API_ROOT}/themes/${themeId}/subthemes/${subthemeId}`}>
     <div className={classes.root}>
-      <Typography variant="body">cheat={cheat}</Typography>
-      {tasks.length !== 0 && <Typography variant="h6">Список заданий:</Typography>}
-      {tasks.length > 0 && tasks.sort((a, b) => a.number - b.number).map((it, index) => (
+      <Typography variant="h6">Методика решения задач данной темы:</Typography>
+      <Typography variant="body">{cheat}</Typography>
+      <Typography variant="h6">Список заданий:</Typography>
+      {tasks.map((it, index) => (
         <Accordion expanded={expanded === index} onChange={handleChange(index)} key={it["id"]}>
           <AccordionSummary key={it.id}
                             expandIcon={<ExpandMoreIcon/>}
