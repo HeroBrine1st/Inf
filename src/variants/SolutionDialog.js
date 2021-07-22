@@ -6,6 +6,7 @@ import {
   DialogContentText,
   DialogTitle
 } from "@material-ui/core";
+import ReactMarkdown from 'react-markdown'
 
 function SolutionDialog(props) {
   return <Dialog open={props.open} onClose={props.onClose} fullWidth>
@@ -13,7 +14,9 @@ function SolutionDialog(props) {
       Решение
     </DialogTitle>
     <DialogContent>
-      <DialogContentText>{props.solution}</DialogContentText>
+      <DialogContentText>
+        <ReactMarkdown>{props.solution}</ReactMarkdown>
+      </DialogContentText>
     </DialogContent>
     <DialogActions>
       <Button onClick={props.onClose} color="primary">

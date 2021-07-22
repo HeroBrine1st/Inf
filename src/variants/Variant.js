@@ -8,6 +8,7 @@ import SolutionDialog from "./SolutionDialog";
 import DownloadingJson from "../misc/DownloadingJson";
 import validatePositiveNumber from "../utils/validatePositiveNumber";
 import {Link} from "react-router-dom";
+import ReactMarkdown from "react-markdown";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -34,7 +35,7 @@ const useStyles = makeStyles((theme) => ({
   secondaryHeading: {
     fontSize: theme.typography.pxToRem(15),
     color: theme.palette.text.secondary,
-  },
+  }
 }))
 
 function Variant(props) {
@@ -46,7 +47,7 @@ function Variant(props) {
   const [dialogContent, setDialogContent] = useState("")
   const [expanded, setExpanded] = useState()
   const history = useHistory()
-  if(!validatePositiveNumber(variantId)) history.push("/404/")
+  if (!validatePositiveNumber(variantId)) history.push("/404/")
   const handleChange = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
@@ -77,11 +78,14 @@ function Variant(props) {
                             id="panel1a-header">
             <Typography className={classes.heading}>Задание №{it.number}</Typography>
             <Typography className={classes.secondaryHeading}>
-              {it["subtheme"].name} (<Link to={`/themes/${it["subtheme"]["theme_id"]}/subthemes/${it["subtheme"].id}`}>#{it["subtheme"].id}</Link>)
+              {it["subtheme"].name} (<Link
+              to={`/themes/${it["subtheme"]["theme_id"]}/subthemes/${it["subtheme"].id}`}>#{it["subtheme"].id}</Link>)
             </Typography>
           </AccordionSummary>
           <AccordionDetails>
-            <Typography variant="subtitle1">{it["content"]}</Typography>
+              <ReactMarkdown>
+                {it["content"]}
+              </ReactMarkdown>
           </AccordionDetails>
           <AccordionActions>
             <Button variant="outlined" color="secondary" onClick={() => {
