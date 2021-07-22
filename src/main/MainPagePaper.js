@@ -48,7 +48,6 @@ function MainPagePaper(props) {
           ))}
         </ul>
       </div>
-
       <Button variant="contained" color="primary" className={classes.button} component={Link} to={props.to}
               endIcon={<NavigateNextRounded/>}>Перейти</Button>
     </Paper>
