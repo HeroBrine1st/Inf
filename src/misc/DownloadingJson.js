@@ -40,6 +40,7 @@ function DownloadingJson({url, onError, onResult, quiet, children, description, 
   onResultRef.current = onResult
   onErrorRef.current = onError
   useEffect(() => {
+    let pending = true
     fetch(url).then(async response => {
       if (!response.ok) {
         if (response.status === 404) {
@@ -48,20 +49,22 @@ function DownloadingJson({url, onError, onResult, quiet, children, description, 
           return
         } else throw new Error(response.statusText)
       }
+      if (!pending) return
       onResultRef.current(await response.json())
       setState(COMPLETED)
     }).catch(error => {
-      setState(ERROR)
+      if (!pending) return
       if (onErrorRef.current) {
         onErrorRef.current(error)
       }
       if (!quiet) enqueueSnackbar("Произошла ошибка при получении данных", {variant: "error"})
+      setState(ERROR)
       console.error(error)
     })
+    return () => {
+      pending = false
+    }
   }, [url, quiet, enqueueSnackbar, onErrorRef, onResultRef, history])
-  useEffect(() => {
-
-  })
   let component
   switch (state) {
     case COMPLETED:
