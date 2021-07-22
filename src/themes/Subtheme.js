@@ -8,7 +8,7 @@ import SolutionDialog from "../variants/SolutionDialog";
 import DownloadingJson from "../misc/DownloadingJson";
 import {Link} from "react-router-dom";
 import validatePositiveNumber from "../utils/validatePositiveNumber";
-import ReactMarkdown from "react-markdown";
+import RenderMarkdown from "../misc/RenderMarkdown";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -78,7 +78,7 @@ function Subtheme(props) {
     url={`${process.env.REACT_APP_API_ROOT}/themes/${themeId}/subthemes/${subthemeId}`}>
     <div className={classes.root}>
       <Typography variant="h6">Методика решения задач данной темы:</Typography>
-      <ReactMarkdown>{cheat}</ReactMarkdown>
+      <RenderMarkdown>{cheat}</RenderMarkdown>
       <Typography variant="h6">Список заданий:</Typography>
       {tasks.map((it, index) => (
         <Accordion expanded={expanded === index} onChange={handleChange(index)} key={it["id"]}>
@@ -92,9 +92,9 @@ function Subtheme(props) {
             </Typography>
           </AccordionSummary>
           <AccordionDetails>
-            <ReactMarkdown>
+            <RenderMarkdown>
               {it["content"]}
-            </ReactMarkdown>
+            </RenderMarkdown>
           </AccordionDetails>
           <AccordionActions>
             <Button variant="outlined" color="secondary" onClick={() => {

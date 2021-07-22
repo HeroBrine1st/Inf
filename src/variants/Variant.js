@@ -8,7 +8,7 @@ import SolutionDialog from "./SolutionDialog";
 import DownloadingJson from "../misc/DownloadingJson";
 import validatePositiveNumber from "../utils/validatePositiveNumber";
 import {Link} from "react-router-dom";
-import ReactMarkdown from "react-markdown";
+import RenderMarkdown from "../misc/RenderMarkdown";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -35,7 +35,8 @@ const useStyles = makeStyles((theme) => ({
   secondaryHeading: {
     fontSize: theme.typography.pxToRem(15),
     color: theme.palette.text.secondary,
-  }
+  },
+  markdown: {},
 }))
 
 function Variant(props) {
@@ -83,9 +84,9 @@ function Variant(props) {
             </Typography>
           </AccordionSummary>
           <AccordionDetails>
-              <ReactMarkdown>
+              <RenderMarkdown>
                 {it["content"]}
-              </ReactMarkdown>
+              </RenderMarkdown>
           </AccordionDetails>
           <AccordionActions>
             <Button variant="outlined" color="secondary" onClick={() => {
