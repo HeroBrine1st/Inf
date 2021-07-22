@@ -30,15 +30,18 @@ const ERROR = -1;
 
 const transitionDuration = 300;
 
-function DownloadingJson({url, onError, onResult, quiet, children, description, nobackdrop, linear}) {
+function DownloadingJson({url, onError, onResult, quiet, children, description, nobackdrop, linear, minDelay}) {
   const [state, setState] = useState(LOADING)
   const {enqueueSnackbar} = useSnackbar()
   const history = useHistory()
   const classes = useStyles()
+  // Чтобы не было бесконечного цикла без useCallback
   const onResultRef = useRef()
   const onErrorRef = useRef()
   onResultRef.current = onResult
   onErrorRef.current = onError
+  // Костыль, чтобы анимации успели отрисоваться, а то дохрена лагающим выглядит иногда
+  const [minTime] = useState(Date.now() + (minDelay || 0))
   useEffect(() => {
     let pending = true
     fetch(url).then(async response => {
@@ -48,6 +51,9 @@ function DownloadingJson({url, onError, onResult, quiet, children, description, 
           setTimeout(() => history.push("/404/"), transitionDuration * 2)
           return
         } else throw new Error(response.statusText)
+      }
+      if (minTime - Date.now() > 0) {
+        await new Promise(resolve => setTimeout(resolve, minTime - Date.now()))
       }
       if (!pending) return
       onResultRef.current(await response.json())
@@ -64,7 +70,7 @@ function DownloadingJson({url, onError, onResult, quiet, children, description, 
     return () => {
       pending = false
     }
-  }, [url, quiet, enqueueSnackbar, onErrorRef, onResultRef, history])
+  }, [url, quiet, enqueueSnackbar, onErrorRef, onResultRef, history, minTime])
   let component
   switch (state) {
     case COMPLETED:
@@ -101,6 +107,7 @@ DownloadingJson.propTypes = {
   nobackdrop: PropTypes.bool,
   linear: PropTypes.bool,
   description: PropTypes.string,
+  minDelay: PropTypes.number,
 };
 
 export default DownloadingJson;
