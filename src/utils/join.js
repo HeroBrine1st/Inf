@@ -1,7 +1,7 @@
-const join = (...paths: String[]) => {
-  let root = paths.shift()
+const join = (...paths) => {
+  let root = String(paths.shift())
   while (paths.length > 0) {
-    let other = paths.shift()
+    let other = String(paths.shift())
     if (root.charAt(root.length - 1) !== "/")
       root += "/"
     if (other.charAt(0) === "/")
