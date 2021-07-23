@@ -60,11 +60,12 @@ function DownloadingJson({url, onError, onResult, quiet, children, description, 
       setState(COMPLETED)
     }).catch(error => {
       if (!pending) return
-      if (onErrorRef.current) {
-        onErrorRef.current(error)
-      }
       if (!quiet) enqueueSnackbar("Произошла ошибка при получении данных", {variant: "error"})
-      setState(ERROR)
+      if (onErrorRef.current) {
+        if (onErrorRef.current(error))
+          setState(COMPLETED)
+        else setState(ERROR)
+      } else setState(ERROR)
       console.error(error)
     })
     return () => {
