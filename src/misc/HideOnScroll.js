@@ -4,11 +4,9 @@ import PropTypes from "prop-types";
 import React from "react";
 
 const HideOnScroll = ({children}) => {
-  return (
-    <Slide appear={false} direction="down" in={!useScrollTrigger()}>
-      {children}
-    </Slide>
-  );
+  return <Slide appear={false} direction="down" in={!useScrollTrigger()}>
+    {children}
+  </Slide>;
 };
 
 HideOnScroll.propTypes = {

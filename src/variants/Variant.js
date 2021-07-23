@@ -1,9 +1,8 @@
 import {useHistory, useParams} from "react-router";
 import {useCallback, useEffect, useState} from "react";
-import {Accordion, AccordionActions, AccordionDetails, AccordionSummary, Button} from "@material-ui/core";
+import {Accordion, AccordionActions, AccordionDetails, AccordionSummary, Button, Typography} from "@material-ui/core";
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import {makeStyles} from "@material-ui/core/styles";
-import Typography from "@material-ui/core/Typography";
 import SolutionDialog from "./SolutionDialog";
 import DownloadingJson from "../misc/DownloadingJson";
 import validatePositiveNumber from "../utils/validatePositiveNumber";
