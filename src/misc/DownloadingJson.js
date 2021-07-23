@@ -62,10 +62,8 @@ function DownloadingJson({url, onError, onResult, quiet, children, description, 
     }).catch(error => {
       if (!pending) return
       if (!quiet) enqueueSnackbar("Произошла ошибка при получении данных", {variant: "error"})
-      if (onErrorRef.current) {
-        if (onErrorRef.current(error))
-          setState(COMPLETED)
-        else setState(ERROR)
+      if (onErrorRef.current && onErrorRef.current(error)) {
+        setState(COMPLETED)
       } else setState(ERROR)
       console.error(error)
     })
@@ -92,7 +90,8 @@ function DownloadingJson({url, onError, onResult, quiet, children, description, 
       break;
   }
   return <>
-    {nobackdrop ? (state !== COMPLETED && <div className={linear ? classes.nobackdropLinear : classes.nobackdrop}>{component}</div>) :
+    {nobackdrop ? (state !== COMPLETED &&
+      <div className={linear ? classes.nobackdropLinear : classes.nobackdrop}>{component}</div>) :
       <Backdrop className={classes.backdrop} open={state !== COMPLETED} transitionDuration={transitionDuration}>
         <div className={classes.backdropContent}>{component}</div>
       </Backdrop>}
@@ -104,7 +103,7 @@ DownloadingJson.propTypes = {
   onError: PropTypes.func,
   onResult: PropTypes.func.isRequired,
   url: PropTypes.string.isRequired,
-  children: PropTypes.node,
+  children: PropTypes.node.isRequired,
   quiet: PropTypes.bool,
   nobackdrop: PropTypes.bool,
   linear: PropTypes.bool,
