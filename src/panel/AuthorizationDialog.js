@@ -12,7 +12,7 @@ import {makeStyles} from "@material-ui/core/styles";
 import {useEffect, useRef, useState} from "react";
 import {Done, Visibility, VisibilityOff} from "@material-ui/icons";
 import IconButton from "@material-ui/core/IconButton";
-import {green} from "@material-ui/core/colors";
+import {green, red} from "@material-ui/core/colors";
 import clsx from "clsx";
 
 const useStyles = makeStyles((theme) => ({
@@ -32,6 +32,12 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: green[500],
     "&:hover": {
       backgroundColor: green[700]
+    }
+  },
+  buttonError: {
+    backgroundColor: red[500],
+    "&:hover": {
+      backgroundColor: red[700]
     }
   },
   buttonProgress: {
@@ -88,9 +94,12 @@ function AuthorizationDialog({handleAuthorized, open, handleClose}) {
   const classes = useStyles()
   const [showPassword, setShowPassword] = useState()
   const [username, setUsername] = useState("")
+  const [usernameError, setUsernameError] = useState("")
   const [password, setPassword] = useState("")
+  const [passwordError, setPasswordError] = useState("")
   const [loading, setLoading] = useState(false)
   const [success, setSuccess] = useState(false)
+  const [error, setError] = useState(false)
   const timer = useRef(0)
 
   useEffect(() => {
@@ -100,15 +109,24 @@ function AuthorizationDialog({handleAuthorized, open, handleClose}) {
   }, []);
 
   const buttonClassname = clsx({
-    [classes.buttonSuccess]: success
+    [classes.buttonSuccess]: success,
+    [classes.buttonError]: error
   });
 
   const handleInput = (setter) => (/**React.ChangeEvent<HTMLInputElement>*/event) => {
+    setUsernameError("")
+    setPasswordError("")
     setter(event.target.value)
   }
   const handleButtonClick = () => {
     if (!loading || !success) {
-      setSuccess(false);
+      if(username.length === 0) {
+        setUsernameError("Имя пользователя не может быть пустым!")
+      }
+      if(password.length === 0) {
+        setPasswordError("Пароль не может быть пустым!")
+      }
+      if(username.length === 0 || password.length === 0) return;
       setLoading(true);
       timer.current = setTimeout(() => {
         setSuccess(true);
@@ -134,6 +152,8 @@ function AuthorizationDialog({handleAuthorized, open, handleClose}) {
             variant="outlined"
             onInput={handleInput(setUsername)}
             value={username}
+            error={usernameError.length !== 0}
+            helperText={usernameError}
           />
           <TextField
             className={classes.textField}
@@ -150,6 +170,8 @@ function AuthorizationDialog({handleAuthorized, open, handleClose}) {
                 </IconButton>
               </InputAdornment>
             }}
+            error={passwordError.length !== 0}
+            helperText={passwordError}
           />
         </div>
       </DialogContent>
