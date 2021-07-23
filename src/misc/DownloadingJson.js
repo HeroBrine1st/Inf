@@ -18,7 +18,8 @@ const useStyles = makeStyles((theme) => ({
     textAlign: "center",
     width: "100%",
   },
-  nobackdrop: {
+  nobackdrop: {},
+  nobackdropLinear: {
     margin: "0 auto",
     width: "100%",
   }
@@ -91,7 +92,7 @@ function DownloadingJson({url, onError, onResult, quiet, children, description, 
       break;
   }
   return <>
-    {nobackdrop ? (state !== COMPLETED && <div className={classes.nobackdrop}>{component}</div>) :
+    {nobackdrop ? (state !== COMPLETED && <div className={linear ? classes.nobackdropLinear : classes.nobackdrop}>{component}</div>) :
       <Backdrop className={classes.backdrop} open={state !== COMPLETED} transitionDuration={transitionDuration}>
         <div className={classes.backdropContent}>{component}</div>
       </Backdrop>}
