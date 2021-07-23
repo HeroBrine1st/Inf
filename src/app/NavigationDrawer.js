@@ -1,12 +1,14 @@
-import {Drawer, List, ListItem, ListItemIcon, ListItemText, makeStyles} from "@material-ui/core";
+import {Button, Drawer, List, ListItem, ListItemIcon, ListItemText, makeStyles} from "@material-ui/core";
 import Toolbar from "@material-ui/core/Toolbar";
-import React from "react";
+import React, {useState} from "react";
 import PropTypes from "prop-types";
 import {Link} from "react-router-dom";
 import Typography from "@material-ui/core/Typography";
 import IconButton from "@material-ui/core/IconButton";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import {Home, LibraryBooks, School} from "@material-ui/icons";
+import DownloadingJson from "../misc/DownloadingJson";
+import AuthorizationDialog from "../panel/AuthorizationDialog";
 
 const useStyles = makeStyles((theme) => ({
   link: {
@@ -36,7 +38,10 @@ const useStyles = makeStyles((theme) => ({
 
 function NavigationDrawer(props) {
   const classes = useStyles()
-  return <Drawer anchor="left" variant="temporary" open={props.open} onClose={props.onClose} BackdropProps={{invisible: true}}>
+  const [authorized, setAuthorized] = useState()
+  const [openAuthDialog, setOpenAuthDialog] = useState(false)
+  return <Drawer anchor="left" variant="temporary" open={props.open} onClose={props.onClose}
+                 BackdropProps={{invisible: true}}>
     <Toolbar>
       <IconButton edge="start" color="inherit" aria-label="menu" className={classes.menuButton}
                   onClick={props.onClose}>
@@ -62,6 +67,22 @@ function NavigationDrawer(props) {
     </List>
 
     <div className={classes.footer}>
+      <DownloadingJson
+        onResult={() => setAuthorized(true)}
+        url={`${process.env.REACT_APP_API_ROOT}/checkauth`}
+        onError={() => {
+          setAuthorized(false)
+          return true
+        }} nobackdrop quiet>
+        {authorized ? "Authorized" :
+          <Button variant="outlined" color="primary" onClick={() => setOpenAuthDialog(true)}>
+            Войти в систему
+          </Button>}
+      </DownloadingJson>
+      <AuthorizationDialog
+        handleAuthorized={() => setAuthorized(true)}
+        handleClose={() => setOpenAuthDialog(false)}
+        open={openAuthDialog}/>
       {/*<Typography variant="caption" color="textSecondary">*/}
       {/*  <MLink href="https://github.com/HeroBrine1st/Inf" target="_blank" rel="noopener noreferrer" underline="none"*/}
       {/*         color="textSecondary" className={classes.link}>Исходный код</MLink>*/}

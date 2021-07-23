@@ -5,9 +5,10 @@ import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import HideOnScroll from "../misc/HideOnScroll";
-import {makeStyles} from "@material-ui/core";
+import {makeStyles, Menu, MenuItem} from "@material-ui/core";
 import NavigationDrawer from "./NavigationDrawer";
 import {Link} from "react-router-dom";
+import {MoreVert} from "@material-ui/icons";
 
 const useStyles = makeStyles((theme) => ({
   menuButton: {
@@ -27,6 +28,16 @@ const useStyles = makeStyles((theme) => ({
 function MainAppBar(props) {
   const classes = useStyles();
   const [drawer, setDrawer] = React.useState(false);
+  const [buttonAnchor, setButtonAnchor] = React.useState(null);
+
+  const handleClick = (event) => {
+    setButtonAnchor(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setButtonAnchor(null);
+  };
+
   return <>
     <HideOnScroll>
       <AppBar>
@@ -38,6 +49,19 @@ function MainAppBar(props) {
           <Typography variant="h6" className={classes.title} component={Link} to="/">
             {props.title}
           </Typography>
+          <div style={{flexGrow: 1}}/>
+          <IconButton edge="end" color="inherit" onClick={handleClick}>
+            <MoreVert/>
+          </IconButton>
+          <Menu
+            id="app-menu"
+            anchorEl={buttonAnchor}
+            keepMounted
+            open={Boolean(buttonAnchor)}
+            onClose={handleClose}
+          >
+            <MenuItem onClick={handleClose}>TODO</MenuItem>
+          </Menu>
         </Toolbar>
       </AppBar>
     </HideOnScroll>

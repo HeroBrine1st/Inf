@@ -4,7 +4,7 @@ import {BrowserRouter} from "react-router-dom"
 import {Route, Switch} from "react-router"
 import Variants from "../variants/Variants";
 import {SnackbarProvider} from "notistack";
-import {useEffect, useState} from "react";
+import {useCallback, useEffect, useState} from "react";
 import React from "react";
 import {makeStyles} from "@material-ui/core/styles";
 import {Button} from "@material-ui/core";
@@ -42,9 +42,9 @@ function App() {
   const classes = useStyles()
   const notistackRef = React.createRef();
   const [title, setTitle] = useState(() => `${process.env.REACT_APP_TITLE}`)
-  const resetTitle = () => {
+  const resetTitle = useCallback(() => {
     setTitle(process.env.REACT_APP_TITLE)
-  };
+  }, []);
   useEffect(() => {
     document.title = title;
   }, [title])
