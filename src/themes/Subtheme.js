@@ -51,14 +51,8 @@ function Subtheme(props) {
   const handleChange = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
-  if(!validatePositiveNumber(themeId)) {
-    console.log("themeId is invalid")
-    history.push("/404/")
-  }
-  if(!validatePositiveNumber(subthemeId)) {
-    console.log("subthemeId is invalid")
-    history.push("/404/")
-  }
+  if(!validatePositiveNumber(themeId)) history.push("/404/")
+  if(!validatePositiveNumber(subthemeId)) history.push("/404/")
   useEffect(() => {
     if (name === undefined) {
       return
