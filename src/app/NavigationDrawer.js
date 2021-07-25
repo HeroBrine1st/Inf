@@ -1,4 +1,4 @@
-import {Button, Drawer, List, ListItem, ListItemIcon, ListItemText, makeStyles} from "@material-ui/core";
+import {Button, Drawer, List, ListItem, ListItemIcon, ListItemText, ListSubheader, makeStyles} from "@material-ui/core";
 import Toolbar from "@material-ui/core/Toolbar";
 import React, {useState} from "react";
 import PropTypes from "prop-types";
@@ -53,6 +53,7 @@ function NavigationDrawer(props) {
         </Typography>
       </Toolbar>
       <List className={classes.list} onClick={props.onClose}>
+        <ListSubheader>Навигация</ListSubheader>
         <ListItem button component={Link} to="/" key="home">
           <ListItemIcon><Home/></ListItemIcon>
           <ListItemText>На главную страницу</ListItemText>
@@ -61,14 +62,17 @@ function NavigationDrawer(props) {
           <ListItemIcon><School/></ListItemIcon>
           <ListItemText>По вариантам</ListItemText>
         </ListItem>
-        <ListItem button component={Link} to="/themes" divider key="by-themes">
+        <ListItem button component={Link} to="/themes" key="by-themes">
           <ListItemIcon><LibraryBooks/></ListItemIcon>
           <ListItemText>По темам</ListItemText>
         </ListItem>
-        {authorized && <ListItem button component={Link} to="/panel" divider key="panel">
-          <ListItemIcon><Settings/></ListItemIcon>
-          <ListItemText>Управление</ListItemText>
-        </ListItem>}
+        {authorized && <>
+          <ListSubheader>Управление</ListSubheader>
+          <ListItem button component={Link} to="/panel" key="panel">
+            <ListItemIcon><Settings/></ListItemIcon>
+            <ListItemText>Управление</ListItemText>
+          </ListItem>
+        </>}
       </List>
 
       <div className={classes.footer}>
