@@ -102,6 +102,18 @@ function NavigationDrawer(props) {
                 <ListItemIcon><Edit/></ListItemIcon>
                 <ListItemText>Редактирование вариантов</ListItemText>
               </ListItem>
+              <ListItem button component={Link} to="/panel/task" key="edit_task">
+                <ListItemIcon><Edit/></ListItemIcon>
+                <ListItemText>Редактирование заданий</ListItemText>
+              </ListItem>
+              <ListItem button component={Link} to="/panel/theme" key="edit_theme">
+                <ListItemIcon><Edit/></ListItemIcon>
+                <ListItemText>Редактирование тем</ListItemText>
+              </ListItem>
+              <ListItem button component={Link} to="/panel/subtheme" key="edit_subtheme">
+                <ListItemIcon><Edit/></ListItemIcon>
+                <ListItemText>Редактирование подтем</ListItemText>
+              </ListItem>
             </> :
             (!authDisabled &&
 
