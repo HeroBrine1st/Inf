@@ -40,6 +40,7 @@ function NavigationDrawer(props) {
   const classes = useStyles()
   const [authorized, setAuthorized] = useState()
   const [openAuthDialog, setOpenAuthDialog] = useState(false)
+  const [authDisabled, setAuthDisabled] = useState(false)
   return <>
     <Drawer anchor="left" variant="temporary" open={props.open} onClose={props.onClose}
             BackdropProps={{invisible: true}} keepMounted>
@@ -80,16 +81,25 @@ function NavigationDrawer(props) {
           onResult={() => setAuthorized(true)}
           url={`${process.env.REACT_APP_API_ROOT}/checkauth`}
           onError={() => {
+            setAuthDisabled(true) // No connection to server
+            return true
+          }}
+          onHttpError={/**Response*/it => {
+            if(it.status === 503) {
+              setAuthDisabled(true)
+              setAuthorized(false)
+            }
             setAuthorized(false)
             return true
-          }} nobackdrop quiet>
-          {authorized ? "Authorized" :
+          }}
+          nobackdrop quiet>
+          {!authDisabled && (authorized ? "Authorized" :
             <Button variant="outlined" color="primary" onClick={() => {
               setOpenAuthDialog(true);
               props.onClose()
             }}>
               Войти в систему
-            </Button>}
+            </Button>)}
         </DownloadingJson>
 
         {/*<Typography variant="caption" color="textSecondary">*/}

@@ -7,7 +7,7 @@ import {SnackbarProvider} from "notistack";
 import {useCallback, useEffect, useState} from "react";
 import React from "react";
 import {makeStyles} from "@material-ui/core/styles";
-import {Button} from "@material-ui/core";
+import {Button, useMediaQuery, useTheme} from "@material-ui/core";
 import PageNotFound from "./PageNotFound";
 import Themes from "../themes/Themes";
 
@@ -40,7 +40,8 @@ const useStyles = makeStyles((theme) => ({
 
 function App() {
   const classes = useStyles()
-  const notistackRef = React.createRef();
+  const notistackRef = React.createRef()
+  const isMobile = useMediaQuery(useTheme().breakpoints.down("lg"))
   const [title, setTitle] = useState(() => `${process.env.REACT_APP_TITLE}`)
   const resetTitle = useCallback(() => {
     setTitle(process.env.REACT_APP_TITLE)
@@ -50,6 +51,7 @@ function App() {
   }, [title])
   return <SnackbarProvider
     ref={notistackRef}
+    dense={isMobile}
     maxSnack={3}
     action={(key) => (
       <Button onClick={() => notistackRef.current.closeSnackbar(key)} className={classes.dismissButton}>Понятно</Button>)}>

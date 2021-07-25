@@ -47,7 +47,9 @@ function DownloadingJson({url, onError, onResult, onHttpError, quiet, children, 
   const [minTime] = useState(Date.now() + (minDelay || 0))
   useEffect(() => {
     let pending = true
-    fetch(url).then(async response => {
+    fetch(url, {
+      credentials: "same-origin"
+    }).then(async response => {
       if (!response.ok) {
         if(!pending) return
         if (response.status === 404) {
@@ -60,7 +62,7 @@ function DownloadingJson({url, onError, onResult, onHttpError, quiet, children, 
         await new Promise(resolve => setTimeout(resolve, minTime - Date.now()))
       }
       if (!pending) return
-      onResultRef.current(await response.json())
+      if(response.status === 204) onResultRef.current(); else onResultRef.current(await response.json())
       setState(COMPLETED)
     }).catch(error => {
       if (!pending) return

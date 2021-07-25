@@ -4,16 +4,17 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
-  DialogTitle,
+  DialogTitle, Grow,
   InputAdornment,
   TextField
 } from "@material-ui/core";
 import {makeStyles} from "@material-ui/core/styles";
-import {useEffect, useRef, useState} from "react";
+import {useState} from "react";
 import {Done, Visibility, VisibilityOff} from "@material-ui/icons";
 import IconButton from "@material-ui/core/IconButton";
 import {green, red} from "@material-ui/core/colors";
 import clsx from "clsx";
+import {useSnackbar} from "notistack";
 
 const useStyles = makeStyles((theme) => ({
   content: {
@@ -74,9 +75,9 @@ const useStyles = makeStyles((theme) => ({
     },
     to: {
       borderRadius: "50%",
-      width: "141%",
+      width: "142%",
       height: 0,
-      paddingBottom: "141%",
+      paddingBottom: "142%",
     }
   },
   doneContent: {
@@ -100,44 +101,69 @@ function AuthorizationDialog({handleAuthorized, open, handleClose}) {
   const [loading, setLoading] = useState(false)
   const [success, setSuccess] = useState(false)
   const [error, setError] = useState(false)
-  const timer = useRef(0)
-
-  useEffect(() => {
-    return () => {
-      clearTimeout(timer.current);
-    };
-  }, []);
+  const {enqueueSnackbar} = useSnackbar()
 
   const buttonClassname = clsx({
     [classes.buttonSuccess]: success,
     [classes.buttonError]: error
   });
 
+  const close = () => !loading && handleClose()
+
   const handleInput = (setter) => (/**React.ChangeEvent<HTMLInputElement>*/event) => {
     setUsernameError("")
     setPasswordError("")
+    setError(false)
     setter(event.target.value)
   }
   const handleButtonClick = () => {
     if (!loading || !success) {
-      if(username.length === 0) {
+      if (username.length === 0) {
         setUsernameError("Имя пользователя не может быть пустым!")
       }
-      if(password.length === 0) {
+      if (password.length === 0) {
         setPasswordError("Пароль не может быть пустым!")
       }
-      if(username.length === 0 || password.length === 0) return;
+      if (username.length === 0 || password.length === 0) return;
       setLoading(true);
-      timer.current = setTimeout(() => {
-        setSuccess(true);
-        setLoading(false);
-        handleAuthorized()
-        setTimeout(() => handleClose(), 1500)
-      }, 2000);
+      const body = `username=${username}&password=${password}`
+      fetch(`${process.env.REACT_APP_API_ROOT}/login`, {
+        method: "POST",
+        credentials: "same-origin",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+          "Content-Length": body.length,
+        },
+        body: body
+      }).then(async it => {
+        setLoading(false)
+        if (!it.ok) {
+          setError(true)
+          if (it.status === 503) {
+            enqueueSnackbar("Авторизация отключена на серверной стороне", {variant: "error"})
+            handleClose()
+          } else if (it.status === 401) {
+            enqueueSnackbar("Неправильное имя пользователя или пароль", {variant: "error"})
+          } else {
+            throw new Error(it.statusText)
+          }
+          return
+        }
+        if (it.status === 204) {
+          setSuccess(true)
+          setTimeout(() => handleClose(), 1500)
+          handleAuthorized()
+        }
+      }).catch(it => {
+        setLoading(false)
+        setError(true)
+        enqueueSnackbar("Произошла неизвестная ошибка", {variant: "error"})
+        console.error(it)
+      })
     }
   };
 
-  return <Dialog open={open} onClose={handleClose}>
+  return <Dialog open={open} onClose={close}>
     <div className={classes.container}>
       <DialogTitle>
         Авторизация
@@ -147,6 +173,7 @@ function AuthorizationDialog({handleAuthorized, open, handleClose}) {
           <TextField
             className={classes.textField}
             id="login"
+            name="username"
             type="text"
             label="Имя пользователя"
             variant="outlined"
@@ -158,6 +185,7 @@ function AuthorizationDialog({handleAuthorized, open, handleClose}) {
           <TextField
             className={classes.textField}
             id="password"
+            name="password"
             type={showPassword ? "text" : "password"}
             label="Пароль"
             variant="outlined"
@@ -176,9 +204,11 @@ function AuthorizationDialog({handleAuthorized, open, handleClose}) {
         </div>
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleClose} color="default" variant="outlined">
-          Закрыть
-        </Button>
+        <Grow in={!loading}>
+          <Button onClick={close} color="default" variant="outlined">
+            Закрыть
+          </Button>
+        </Grow>
         <div className={classes.buttonContainer}>
           <Button color="primary" variant="contained" onClick={handleButtonClick}
                   disabled={loading} className={buttonClassname}>
