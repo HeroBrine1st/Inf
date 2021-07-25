@@ -31,7 +31,7 @@ const ERROR = -1;
 
 const transitionDuration = 300;
 
-function DownloadingJson({url, onError, onResult, quiet, children, description, nobackdrop, linear, minDelay}) {
+function DownloadingJson({url, onError, onResult, onHttpError, quiet, children, description, nobackdrop, linear, minDelay}) {
   const [state, setState] = useState(LOADING)
   const {enqueueSnackbar} = useSnackbar()
   const history = useHistory()
@@ -39,19 +39,22 @@ function DownloadingJson({url, onError, onResult, quiet, children, description, 
   // Чтобы не было бесконечного цикла без useCallback
   const onResultRef = useRef()
   const onErrorRef = useRef()
+  const onHttpErrorRef = useRef()
   onResultRef.current = onResult
   onErrorRef.current = onError
+  onHttpErrorRef.current = onHttpError || onError
   // Костыль, чтобы анимации успели отрисоваться, а то дохрена лагающим выглядит иногда
   const [minTime] = useState(Date.now() + (minDelay || 0))
   useEffect(() => {
     let pending = true
     fetch(url).then(async response => {
       if (!response.ok) {
+        if(!pending) return
         if (response.status === 404) {
           setState(ERROR)
           setTimeout(() => history.push("/404/"), transitionDuration * 2)
-          return
-        } else throw new Error(response.statusText)
+        } else (onHttpErrorRef.current && onHttpErrorRef.current(response)) ? setState(COMPLETED) : setState(ERROR)
+        return
       }
       if (minTime - Date.now() > 0) {
         await new Promise(resolve => setTimeout(resolve, minTime - Date.now()))
@@ -61,16 +64,14 @@ function DownloadingJson({url, onError, onResult, quiet, children, description, 
       setState(COMPLETED)
     }).catch(error => {
       if (!pending) return
-      if (!quiet) enqueueSnackbar("Произошла ошибка при получении данных", {variant: "error"})
-      if (onErrorRef.current && onErrorRef.current(error)) {
-        setState(COMPLETED)
-      } else setState(ERROR)
+      if (!quiet) enqueueSnackbar("Произошла ошибка при получении данных", {variant: "error"}); // ТОЧКУ С ЗАПЯТОЙ НЕ УБИРАТЬ
+      (onErrorRef.current && onErrorRef.current(error)) ? setState(COMPLETED) : setState(ERROR)
       console.error(error)
     })
     return () => {
       pending = false
     }
-  }, [url, quiet, enqueueSnackbar, onErrorRef, onResultRef, history, minTime])
+  }, [url, quiet, enqueueSnackbar, onErrorRef, onResultRef, onHttpErrorRef, history, minTime])
   let component
   switch (state) {
     case COMPLETED:
@@ -101,6 +102,7 @@ function DownloadingJson({url, onError, onResult, quiet, children, description, 
 
 DownloadingJson.propTypes = {
   onError: PropTypes.func,
+  onHttpError: PropTypes.func,
   onResult: PropTypes.func.isRequired,
   url: PropTypes.string.isRequired,
   children: PropTypes.node.isRequired,
