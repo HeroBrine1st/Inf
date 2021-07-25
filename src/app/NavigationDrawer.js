@@ -1,4 +1,13 @@
-import {Button, Drawer, List, ListItem, ListItemIcon, ListItemText, ListSubheader, makeStyles} from "@material-ui/core";
+import {
+  Drawer,
+  List,
+  ListItem,
+  ListItemIcon, ListItemSecondaryAction,
+  ListItemText,
+  ListSubheader,
+  makeStyles,
+  Tooltip
+} from "@material-ui/core";
 import Toolbar from "@material-ui/core/Toolbar";
 import React, {useState} from "react";
 import PropTypes from "prop-types";
@@ -6,7 +15,7 @@ import {Link} from "react-router-dom";
 import Typography from "@material-ui/core/Typography";
 import IconButton from "@material-ui/core/IconButton";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
-import {Home, LibraryBooks, School, Settings} from "@material-ui/icons";
+import {AccountBox, Edit, HelpOutline, Home, LibraryBooks, School, Settings} from "@material-ui/icons";
 import DownloadingJson from "../misc/DownloadingJson";
 import AuthorizationDialog from "../panel/AuthorizationDialog";
 
@@ -67,16 +76,7 @@ function NavigationDrawer(props) {
           <ListItemIcon><LibraryBooks/></ListItemIcon>
           <ListItemText>По темам</ListItemText>
         </ListItem>
-        {authorized && <>
-          <ListSubheader>Управление</ListSubheader>
-          <ListItem button component={Link} to="/panel" key="panel">
-            <ListItemIcon><Settings/></ListItemIcon>
-            <ListItemText>Управление</ListItemText>
-          </ListItem>
-        </>}
-      </List>
-
-      <div className={classes.footer}>
+        <ListSubheader>Управление</ListSubheader>
         <DownloadingJson
           onResult={() => setAuthorized(true)}
           url={`${process.env.REACT_APP_API_ROOT}/checkauth`}
@@ -85,23 +85,44 @@ function NavigationDrawer(props) {
             return true
           }}
           onHttpError={/**Response*/it => {
-            if(it.status === 503) {
+            if (it.status === 503) {
               setAuthDisabled(true)
-              setAuthorized(false)
             }
             setAuthorized(false)
             return true
           }}
-          nobackdrop quiet>
-          {!authDisabled && (authorized ? "Authorized" :
-            <Button variant="outlined" color="primary" onClick={() => {
-              setOpenAuthDialog(true);
-              props.onClose()
-            }}>
-              Войти в систему
-            </Button>)}
-        </DownloadingJson>
+          nobackdrop quiet linear>
+          {authorized ?
+            <>
+              <ListItem button component={Link} to="/panel" key="overview">
+                <ListItemIcon><Settings/></ListItemIcon>
+                <ListItemText>Панель управления</ListItemText>
+              </ListItem>
+              <ListItem button component={Link} to="/panel/variant" key="edit_variant">
+                <ListItemIcon><Edit/></ListItemIcon>
+                <ListItemText>Редактирование вариантов</ListItemText>
+              </ListItem>
+            </> :
+            (!authDisabled &&
 
+              <ListItem button key="auth" onClick={() => {
+                setOpenAuthDialog(true);
+                props.onClose()
+              }}>
+                <ListItemIcon><AccountBox/></ListItemIcon>
+                <ListItemText>Войти</ListItemText>
+                <ListItemSecondaryAction>
+                  <Tooltip title="Для разработчиков" placement="right" arrow>
+                    <HelpOutline/>
+                  </Tooltip>
+                </ListItemSecondaryAction>
+              </ListItem>
+            )
+          }
+        </DownloadingJson>
+      </List>
+
+      <div className={classes.footer}>
         {/*<Typography variant="caption" color="textSecondary">*/}
         {/*  <MLink href="https://github.com/HeroBrine1st/Inf" target="_blank" rel="noopener noreferrer" underline="none"*/}
         {/*         color="textSecondary" className={classes.link}>Исходный код</MLink>*/}

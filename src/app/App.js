@@ -10,6 +10,7 @@ import {makeStyles} from "@material-ui/core/styles";
 import {Button, useMediaQuery, useTheme} from "@material-ui/core";
 import PageNotFound from "./PageNotFound";
 import Themes from "../themes/Themes";
+import Overview from "../panel/Overview";
 
 const useStyles = makeStyles((theme) => ({
   app: {
@@ -68,6 +69,9 @@ function App() {
             </Route>
             <Route path="/themes/">
               <Themes setTitle={setTitle} resetTitle={resetTitle}/>
+            </Route>
+            <Route path="/panel/">
+              <Overview setTitle={setTitle} resetTitle={resetTitle}/>
             </Route>
             <Route path="*"> {/*404*/}
               <PageNotFound/>

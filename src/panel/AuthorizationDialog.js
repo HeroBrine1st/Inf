@@ -126,15 +126,13 @@ function AuthorizationDialog({handleAuthorized, open, handleClose}) {
       }
       if (username.length === 0 || password.length === 0) return;
       setLoading(true);
-      const body = `username=${username}&password=${password}`
       fetch(`${process.env.REACT_APP_API_ROOT}/login`, {
         method: "POST",
         credentials: "same-origin",
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
-          "Content-Length": body.length,
         },
-        body: body
+        body: `username=${username}&password=${password}`
       }).then(async it => {
         setLoading(false)
         if (!it.ok) {
