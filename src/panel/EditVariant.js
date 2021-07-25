@@ -13,7 +13,7 @@ import {makeStyles} from "@material-ui/core/styles";
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import {useHistory} from "react-router";
 import {useSnackbar} from "notistack";
-import {green} from "@material-ui/core/colors";
+import {green, red} from "@material-ui/core/colors";
 import clsx from "clsx";
 
 const useStyles = makeStyles((theme) => ({
@@ -26,17 +26,18 @@ const useStyles = makeStyles((theme) => ({
   },
   actionsContainer: {
     marginBottom: theme.spacing(2),
+    marginTop: theme.spacing(1),
     display: "flex",
     flexDirection: "row",
   },
   button: {
-    margin: theme.spacing(1)
+    marginLeft: theme.spacing(0.5),
+    marginRight: theme.spacing(0.5),
   },
   textField: {
     minWidth: "32ch",
   },
   buttonContainer: {
-    margin: theme.spacing(1),
     position: "relative"
   },
   buttonProgress: {
@@ -47,6 +48,13 @@ const useStyles = makeStyles((theme) => ({
     marginTop: -12,
     marginLeft: -12,
   },
+  deleteButton: {
+    backgroundColor: red[500],
+    color: "white",
+    "&:hover": {
+      backgroundColor: red[700],
+    }
+  }
 }))
 
 function EditVariant({setTitle, resetTitle}) {
@@ -70,6 +78,7 @@ function EditVariant({setTitle, resetTitle}) {
   const loadVariants = () => {
     if (variantsLoading) return
     setVariantsLoading(true)
+    setVariants([])
     fetch(`${process.env.REACT_APP_API_ROOT}/variants/`).then(async response => {
       const /**Array*/result = await response.json()
       result.unshift({id: -1, name: "Создать новый"})
@@ -89,6 +98,8 @@ function EditVariant({setTitle, resetTitle}) {
           <StepLabel>Выберите вариант</StepLabel>
           <StepContent>
             <Autocomplete
+              noOptionsText="Не найдено"
+              loadingText="Загрузка.."
               open={variantAutocompleteOpen}
               onOpen={() => {
                 setVariantAutocompleteOpen(true);
@@ -97,6 +108,7 @@ function EditVariant({setTitle, resetTitle}) {
               onClose={() => setVariantAutocompleteOpen(false)}
               options={variants}
               getOptionLabel={it => it["name"]}
+              getOptionSelected={(option, value) => option["id"] === value["id"]}
               loading={variantsLoading}
               onChange={(event, newValue) => {
                 setVariant(newValue)
@@ -105,7 +117,7 @@ function EditVariant({setTitle, resetTitle}) {
               renderInput={params => (
                 <TextField
                   {...params}
-                  label="Выберите вариант"
+                  label="Вариант"
                   variant="outlined"
                   InputProps={{
                     ...params.InputProps,
@@ -186,10 +198,15 @@ function EditVariant({setTitle, resetTitle}) {
                             console.error(error)
                           })
                         }}>Готово</Button>
-                <Button variant="outlined" className={clsx(classes.button)}
+                {variantPushing && (
+                  <CircularProgress size={24} className={classes.buttonProgress}/>
+                )}
+              </div>
+              <div className={classes.buttonContainer}>
+                <Button variant="contained" className={clsx(classes.button, classes.deleteButton)}
                         disabled={variantPushing || (variant && variant["id"] === -1)}
                         onClick={() => {
-                          if(!promptDeletion) {
+                          if (!promptDeletion) {
                             setPromptDeletion(true)
                             setTimeout(() => setPromptDeletion(false), 500)
                             return
