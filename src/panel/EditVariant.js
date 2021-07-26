@@ -79,6 +79,7 @@ function EditVariant({setTitle, resetTitle}) {
     setVariantsLoading(true)
     setVariants([])
     fetch(`${process.env.REACT_APP_API_ROOT}/variants/`).then(async response => {
+      if(!response.ok) throw new Error(response.statusText)
       const /**Array*/result = await response.json()
       result.unshift({id: -1, name: "Создать новый"})
       setVariants(result)

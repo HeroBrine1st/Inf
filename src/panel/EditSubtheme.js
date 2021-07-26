@@ -35,7 +35,7 @@ const useStyles = makeStyles((theme) => ({
     marginRight: theme.spacing(0.5),
   },
   textField: {
-    minWidth: "32ch",
+    marginBottom: theme.spacing(1),
   },
   buttonContainer: {
     position: "relative"
@@ -62,15 +62,25 @@ function EditTheme({setTitle, resetTitle}) {
   const history = useHistory()
   const {enqueueSnackbar} = useSnackbar()
   const [step, setStep] = useState(0)
+
+  // Step 1
   const [allThemes, setAllThemes] = useState([])
   const [selectedTheme, selectTheme] = useState(null)
-  const [name, setName] = useState("")
   const [themesLoading, setThemesLoading] = useState(false)
-  const [themePushing, setThemePushing] = useState(false)
+
+  // Step 2
+  const [subthemesLoading, setSubthemesLoading] = useState(false)
+  const [selectedSubtheme, selectSubtheme] = useState(null)
+  const [allSubthemes, setAllSubthemes] = useState([])
+
+  // Step 3
+  const [name, setName] = useState("")
+  const [cheat, setCheat] = useState("")
+  const [subthemePushing, setSubthemePushing] = useState(false)
   const [promptDeletion, setPromptDeletion] = useState(false)
 
   useEffect(() => {
-    setTitle("Редактирование темы")
+    setTitle("Редактирование подтемы")
     return resetTitle
   }, [setTitle, resetTitle])
 
@@ -79,11 +89,29 @@ function EditTheme({setTitle, resetTitle}) {
     setThemesLoading(true)
     setAllThemes([])
     fetch(`${process.env.REACT_APP_API_ROOT}/themes/`).then(async response => {
+      setAllThemes(await response.json())
+      setThemesLoading(false)
+    }).catch(error => {
+      console.error(error)
+      enqueueSnackbar("Произошла неизвестная ошибка", {variant: "error"})
+      history.push("/");
+    })
+  }
+
+  const loadSubthemes = () => {
+    if (subthemesLoading) return
+    setSubthemesLoading(true)
+    setAllSubthemes([])
+    fetch(`${process.env.REACT_APP_API_ROOT}/themes/${selectedTheme["id"]}/subthemes/`).then(async response => {
       if(!response.ok) throw new Error(response.statusText)
       const /**Array*/result = await response.json()
-      result.unshift({id: -1, name: "Создать новую"})
-      setAllThemes(result)
-      setThemesLoading(false)
+      result.unshift({
+        id: -1,
+        name: "Создать новую",
+        cheat: ""
+      })
+      setAllSubthemes(result)
+      setSubthemesLoading(false)
     }).catch(error => {
       console.error(error)
       enqueueSnackbar("Произошла неизвестная ошибка", {variant: "error"})
@@ -135,17 +163,63 @@ function EditTheme({setTitle, resetTitle}) {
               <Button variant="contained" color="primary" className={classes.button} disabled={selectedTheme == null}
                       onClick={() => {
                         setStep(1);
-                        if (selectedTheme["id"] !== -1)
-                          setName(selectedTheme["name"])
-                        else setName("")
                       }}>Дальше</Button>
             </div>
           </StepContent>
         </Step>
         <Step key={1}>
+          <StepLabel>Выберите подтему</StepLabel>
+          <StepContent>
+            <Autocomplete
+              noOptionsText="Не найдено"
+              loadingText="Загрузка.."
+              onOpen={() => {
+                loadSubthemes()
+              }}
+              options={allSubthemes}
+              getOptionLabel={it => it["name"]}
+              getOptionSelected={(option, value) => option["id"] === value["id"]}
+              loading={themesLoading}
+              onChange={(event, newValue) => {
+                selectSubtheme(newValue)
+              }}
+              value={selectedSubtheme}
+              renderInput={params => (
+                <TextField
+                  {...params}
+                  label="Подтема"
+                  variant="outlined"
+                  InputProps={{
+                    ...params.InputProps,
+                    endAdornment: (
+                      <>
+                        {themesLoading ? <CircularProgress color="inherit" size={20}/> : null}
+                        {params.InputProps.endAdornment}
+                      </>
+                    ),
+                  }}
+                />
+              )}
+            />
+            <div className={classes.actionsContainer}>
+              <Button className={classes.button} onClick={() => setStep(0)}>
+                Назад
+              </Button>
+              <Button variant="contained" color="primary" className={classes.button} disabled={selectedSubtheme == null}
+                      onClick={() => {
+                        setStep(2);
+                        if(selectedSubtheme["id"] === -1) setName("")
+                        else setName(selectedSubtheme["name"])
+                        setCheat(selectedSubtheme["cheat"])
+                      }}>Дальше</Button>
+            </div>
+          </StepContent>
+        </Step>
+        <Step key={2}>
           <StepLabel>Введите значения</StepLabel>
           <StepContent>
             <TextField
+              className={classes.textField}
               fullWidth
               id="theme_name"
               name="theme_name"
@@ -155,23 +229,37 @@ function EditTheme({setTitle, resetTitle}) {
               onInput={/**React.ChangeEvent<HTMLInputElement>*/event => setName(event.target.value)}
               value={name}
               error={name.length === 0}
-              helperText={name.length === 0 && "Название темы не может быть пустым!"}
+              helperText={name.length === 0 && "Название подтемы не может быть пустым!"}
             />
+            <TextField
+              className={classes.textField}
+              fullWidth
+              id="theme_name"
+              name="theme_name"
+              type="text"
+              label="Методика решения"
+              variant="outlined"
+              onInput={/**React.ChangeEvent<HTMLInputElement>*/event => setCheat(event.target.value)}
+              value={cheat}
+              error={cheat.length === 0}
+              helperText={cheat.length === 0 && "Методика решения не может быть пустой!"}
+              multiline rowsMax={7}/>
             <div className={classes.actionsContainer}>
-              <Button className={classes.button} onClick={() => setStep(0)}>
+              <Button className={classes.button} onClick={() => setStep(1)}>
                 Назад
               </Button>
               <div className={classes.buttonContainer}>
                 <Button variant="contained" color="primary" className={classes.button}
-                        disabled={name.length === 0 || themePushing}
+                        disabled={name.length === 0 || subthemePushing}
                         onClick={() => {
-                          setThemePushing(true)
+                          setSubthemePushing(true)
                           const body = JSON.stringify({
                             "name": name,
+                            "cheat": cheat,
                           })
-                          let url = `${process.env.REACT_APP_API_ROOT}/themes/`
-                          if (selectedTheme["id"] !== -1) url += `${selectedTheme["id"]}/`
-                          const method = selectedTheme["id"] === -1 ? "POST" : "PUT"
+                          let url = `${process.env.REACT_APP_API_ROOT}/themes/${selectedTheme["id"]}/subthemes/`
+                          if (selectedSubtheme["id"] !== -1) url += `${selectedSubtheme["id"]}/`
+                          const method = selectedSubtheme["id"] === -1 ? "POST" : "PUT"
                           fetch(url, {
                             method: method,
                             credentials: "same-origin",
@@ -181,27 +269,27 @@ function EditTheme({setTitle, resetTitle}) {
                             }
                           }).then(async response => {
                             if (!response.ok) {
-                              setThemePushing(false)
+                              setSubthemePushing(false)
                               enqueueSnackbar("Произошла неизвестная ошибка", {variant: "error"})
                               console.error(response.statusText)
                               return
                             }
-                            selectTheme(await response.json())
-                            setThemePushing(false)
-                            enqueueSnackbar(`Тема ${method === "POST" ? "создана" : "изменена"}!`, {variant: "info"})
+                            selectSubtheme(await response.json())
+                            setSubthemePushing(false)
+                            enqueueSnackbar(`Подтема ${method === "POST" ? "создана" : "изменена"}!`, {variant: "info"})
                           }).catch(error => {
-                            setThemePushing(false)
+                            setSubthemePushing(false)
                             enqueueSnackbar("Произошла неизвестная ошибка", {variant: "error"})
                             console.error(error)
                           })
                         }}>Готово</Button>
-                {themePushing && (
+                {subthemePushing && (
                   <CircularProgress size={24} className={classes.buttonProgress}/>
                 )}
               </div>
               <div className={classes.buttonContainer}>
                 <Button variant="contained" className={clsx(classes.button, classes.deleteButton)}
-                        disabled={themePushing || (selectedTheme && selectedTheme["id"] === -1)}
+                        disabled={subthemePushing || (selectedSubtheme && selectedSubtheme["id"] === -1)}
                         onClick={() => {
                           if (!promptDeletion) {
                             setPromptDeletion(true)
@@ -209,30 +297,30 @@ function EditTheme({setTitle, resetTitle}) {
                             return
                           }
                           setPromptDeletion(false)
-                          setThemePushing(true)
-                          let url = `${process.env.REACT_APP_API_ROOT}/themes/${selectedTheme["id"]}/`
+                          setSubthemePushing(true)
+                          let url = `${process.env.REACT_APP_API_ROOT}/themes/${selectedTheme["id"]}/subthemes/${selectedSubtheme["id"]}`
                           fetch(url, {
                             method: "DELETE",
                             credentials: "same-origin",
                           }).then(response => {
-                            setThemePushing(false)
+                            setSubthemePushing(false)
                             if (!response.ok) {
                               enqueueSnackbar("Произошла неизвестная ошибка", {variant: "error"})
                               console.error(response.statusText)
                               return
                             }
-                            enqueueSnackbar(`Тема удалена!`, {variant: "info"})
+                            enqueueSnackbar(`Подтема удалена!`, {variant: "info"})
                             setStep(0)
                             selectTheme(null)
                           }).catch(error => {
-                            setThemePushing(false)
+                            setSubthemePushing(false)
                             enqueueSnackbar("Произошла неизвестная ошибка", {variant: "error"})
                             console.error(error)
                           })
                         }}>
                   {promptDeletion ? "Точно?" : "Удалить"}
                 </Button>
-                {themePushing && (
+                {subthemePushing && (
                   <CircularProgress size={24} className={classes.buttonProgress}/>
                 )}
               </div>
