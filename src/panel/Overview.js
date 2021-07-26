@@ -4,6 +4,7 @@ import join from "../utils/join";
 import EditVariant from "./EditVariant";
 import PageNotFound from "../app/PageNotFound";
 import EditTask from "./EditTask";
+import EditTheme from "./EditTheme";
 
 // const useStyles = makeStyles((theme) => ({
 //   root: {
@@ -28,6 +29,9 @@ function Overview({setTitle, resetTitle}) {
     </Route>
     <Route path={join(path, "task")}>
       <EditTask setTitle={setTitle} resetTitle={resetTitle}/>
+    </Route>
+    <Route path={join(path, "theme")}>
+      <EditTheme setTitle={setTitle} resetTitle={resetTitle}/>
     </Route>
     <Route path="*"> {/*404*/}
       <PageNotFound/>

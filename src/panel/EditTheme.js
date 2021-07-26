@@ -57,33 +57,33 @@ const useStyles = makeStyles((theme) => ({
   }
 }))
 
-function EditVariant({setTitle, resetTitle}) {
+function EditTheme({setTitle, resetTitle}) {
   const classes = useStyles()
   const history = useHistory()
   const {enqueueSnackbar} = useSnackbar()
   const [step, setStep] = useState(0)
   const [variantAutocompleteOpen, setVariantAutocompleteOpen] = useState(false)
-  const [variants, setVariants] = useState([])
-  const [variant, setVariant] = useState(null)
-  const [variantName, setVariantName] = useState("")
-  const [variantsLoading, setVariantsLoading] = useState(false)
-  const [variantPushing, setVariantPushing] = useState(false)
+  const [allVariants, setAllVariants] = useState([])
+  const [selectedTheme, selectTheme] = useState(null)
+  const [name, setName] = useState("")
+  const [themesLoading, setThemesLoading] = useState(false)
+  const [themePushing, setThemePushing] = useState(false)
   const [promptDeletion, setPromptDeletion] = useState(false)
 
   useEffect(() => {
-    setTitle("Редактирование варианта")
+    setTitle("Редактирование темы")
     return resetTitle
   }, [setTitle, resetTitle])
 
   const loadVariants = () => {
-    if (variantsLoading) return
-    setVariantsLoading(true)
-    setVariants([])
-    fetch(`${process.env.REACT_APP_API_ROOT}/variants/`).then(async response => {
+    if (themesLoading) return
+    setThemesLoading(true)
+    setAllVariants([])
+    fetch(`${process.env.REACT_APP_API_ROOT}/themes/`).then(async response => {
       const /**Array*/result = await response.json()
-      result.unshift({id: -1, name: "Создать новый"})
-      setVariants(result)
-      setVariantsLoading(false)
+      result.unshift({id: -1, name: "Создать новую"})
+      setAllVariants(result)
+      setThemesLoading(false)
     }).catch(error => {
       console.error(error)
       enqueueSnackbar("Произошла неизвестная ошибка", {variant: "error"})
@@ -95,7 +95,7 @@ function EditVariant({setTitle, resetTitle}) {
     <Paper>
       <Stepper orientation="vertical" activeStep={step}>
         <Step key={0}>
-          <StepLabel>Выберите вариант</StepLabel>
+          <StepLabel>Выберите тему</StepLabel>
           <StepContent>
             <Autocomplete
               noOptionsText="Не найдено"
@@ -106,24 +106,24 @@ function EditVariant({setTitle, resetTitle}) {
                 loadVariants()
               }}
               onClose={() => setVariantAutocompleteOpen(false)}
-              options={variants}
+              options={allVariants}
               getOptionLabel={it => it["name"]}
               getOptionSelected={(option, value) => option["id"] === value["id"]}
-              loading={variantsLoading}
+              loading={themesLoading}
               onChange={(event, newValue) => {
-                setVariant(newValue)
+                selectTheme(newValue)
               }}
-              value={variant}
+              value={selectedTheme}
               renderInput={params => (
                 <TextField
                   {...params}
-                  label="Вариант"
+                  label="Тема"
                   variant="outlined"
                   InputProps={{
                     ...params.InputProps,
                     endAdornment: (
                       <>
-                        {variantsLoading ? <CircularProgress color="inherit" size={20}/> : null}
+                        {themesLoading ? <CircularProgress color="inherit" size={20}/> : null}
                         {params.InputProps.endAdornment}
                       </>
                     ),
@@ -135,12 +135,12 @@ function EditVariant({setTitle, resetTitle}) {
               <Button disabled className={classes.button}>
                 Назад
               </Button>
-              <Button variant="contained" color="primary" className={classes.button} disabled={variant == null}
+              <Button variant="contained" color="primary" className={classes.button} disabled={selectedTheme == null}
                       onClick={() => {
                         setStep(1);
-                        if (variant["id"] !== -1)
-                          setVariantName(variant["name"])
-                        else setVariantName("")
+                        if (selectedTheme["id"] !== -1)
+                          setName(selectedTheme["name"])
+                        else setName("")
                       }}>Дальше</Button>
             </div>
           </StepContent>
@@ -150,15 +150,15 @@ function EditVariant({setTitle, resetTitle}) {
           <StepContent>
             <TextField
               fullWidth
-              id="variant_name"
-              name="variant_name"
+              id="theme_name"
+              name="theme_name"
               type="text"
               label="Название"
               variant="outlined"
-              onInput={/**React.ChangeEvent<HTMLInputElement>*/event => setVariantName(event.target.value)}
-              value={variantName}
-              error={variantName.length === 0}
-              helperText={variantName.length === 0 && "Название варианта не может быть пустым!"}
+              onInput={/**React.ChangeEvent<HTMLInputElement>*/event => setName(event.target.value)}
+              value={name}
+              error={name.length === 0}
+              helperText={name.length === 0 && "Название темы не может быть пустым!"}
             />
             <div className={classes.actionsContainer}>
               <Button className={classes.button} onClick={() => setStep(0)}>
@@ -166,15 +166,15 @@ function EditVariant({setTitle, resetTitle}) {
               </Button>
               <div className={classes.buttonContainer}>
                 <Button variant="contained" color="primary" className={classes.button}
-                        disabled={variantName.length === 0 || variantPushing}
+                        disabled={name.length === 0 || themePushing}
                         onClick={() => {
-                          setVariantPushing(true)
+                          setThemePushing(true)
                           const body = JSON.stringify({
-                            "name": variantName,
+                            "name": name,
                           })
-                          let url = `${process.env.REACT_APP_API_ROOT}/variants/`
-                          if (variant["id"] !== -1) url += `${variant["id"]}/`
-                          const method = variant["id"] === -1 ? "POST" : "PUT"
+                          let url = `${process.env.REACT_APP_API_ROOT}/themes/`
+                          if (selectedTheme["id"] !== -1) url += `${selectedTheme["id"]}/`
+                          const method = selectedTheme["id"] === -1 ? "POST" : "PUT"
                           fetch(url, {
                             method: method,
                             credentials: "same-origin",
@@ -184,27 +184,27 @@ function EditVariant({setTitle, resetTitle}) {
                             }
                           }).then(async response => {
                             if (!response.ok) {
-                              setVariantPushing(false)
+                              setThemePushing(false)
                               enqueueSnackbar("Произошла неизвестная ошибка", {variant: "error"})
                               console.error(response.statusText)
                               return
                             }
-                            setVariant(await response.json())
-                            setVariantPushing(false)
-                            enqueueSnackbar(`Вариант ${method === "POST" ? "создан" : "изменен"}!`, {variant: "info"})
+                            selectTheme(await response.json())
+                            setThemePushing(false)
+                            enqueueSnackbar(`Тема ${method === "POST" ? "создана" : "изменена"}!`, {variant: "info"})
                           }).catch(error => {
-                            setVariantPushing(false)
+                            setThemePushing(false)
                             enqueueSnackbar("Произошла неизвестная ошибка", {variant: "error"})
                             console.error(error)
                           })
                         }}>Готово</Button>
-                {variantPushing && (
+                {themePushing && (
                   <CircularProgress size={24} className={classes.buttonProgress}/>
                 )}
               </div>
               <div className={classes.buttonContainer}>
                 <Button variant="contained" className={clsx(classes.button, classes.deleteButton)}
-                        disabled={variantPushing || (variant && variant["id"] === -1)}
+                        disabled={themePushing || (selectedTheme && selectedTheme["id"] === -1)}
                         onClick={() => {
                           if (!promptDeletion) {
                             setPromptDeletion(true)
@@ -212,30 +212,30 @@ function EditVariant({setTitle, resetTitle}) {
                             return
                           }
                           setPromptDeletion(false)
-                          setVariantPushing(true)
-                          let url = `${process.env.REACT_APP_API_ROOT}/variants/${variant["id"]}/`
+                          setThemePushing(true)
+                          let url = `${process.env.REACT_APP_API_ROOT}/themes/${selectedTheme["id"]}/`
                           fetch(url, {
                             method: "DELETE",
                             credentials: "same-origin",
                           }).then(response => {
-                            setVariantPushing(false)
+                            setThemePushing(false)
                             if (!response.ok) {
                               enqueueSnackbar("Произошла неизвестная ошибка", {variant: "error"})
                               console.error(response.statusText)
                               return
                             }
-                            enqueueSnackbar(`Вариант удален!`, {variant: "info"})
+                            enqueueSnackbar(`Тема удалена!`, {variant: "info"})
                             setStep(0)
-                            setVariant(null)
+                            selectTheme(null)
                           }).catch(error => {
-                            setVariantPushing(false)
+                            setThemePushing(false)
                             enqueueSnackbar("Произошла неизвестная ошибка", {variant: "error"})
                             console.error(error)
                           })
                         }}>
                   {promptDeletion ? "Точно?" : "Удалить"}
                 </Button>
-                {variantPushing && (
+                {themePushing && (
                   <CircularProgress size={24} className={classes.buttonProgress}/>
                 )}
               </div>
@@ -247,4 +247,4 @@ function EditVariant({setTitle, resetTitle}) {
   </div>
 }
 
-export default EditVariant
+export default EditTheme
