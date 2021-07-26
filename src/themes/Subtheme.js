@@ -7,7 +7,7 @@ import {
   AccordionSummary,
   Button,
   Card, CardActions,
-  CardContent
+  CardContent, Collapse
 } from "@material-ui/core";
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import {makeStyles} from "@material-ui/core/styles";
@@ -18,6 +18,8 @@ import {Link} from "react-router-dom";
 import validatePositiveNumber from "../utils/validatePositiveNumber";
 import RenderMarkdown from "../misc/RenderMarkdown";
 import ReactToPrint from "react-to-print";
+import clsx from "clsx";
+import IconButton from "@material-ui/core/IconButton";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -51,8 +53,22 @@ const useStyles = makeStyles((theme) => ({
     margin: theme.spacing(1),
   },
   cheatPaper: {
-    width: "50%",
+    width: "100%",
     alignSelf: "center",
+    margin: theme.spacing(1),
+  },
+  expand: {
+    transform: 'rotate(0deg)',
+    transition: theme.transitions.create('transform', {
+      duration: theme.transitions.duration.shortest,
+    }),
+  },
+  expandOpen: {
+    transform: 'rotate(180deg)',
+  },
+  cheatContent: {
+    display: "flex",
+    flexDirection: "row",
   }
 }))
 
@@ -65,6 +81,7 @@ function Subtheme(props) {
   const [dialog, openDialog] = useState(false)
   const [dialogContent, setDialogContent] = useState("")
   const [expanded, setExpanded] = useState()
+  const [cheatExpanded, setCheatExpanded] = useState(false)
   const history = useHistory()
   const cheatRef = useRef()
   const handleChange = (panel) => (event, isExpanded) => {
@@ -93,20 +110,30 @@ function Subtheme(props) {
       <Card className={classes.cheatPaper}>
         <CardContent>
           <div ref={cheatRef} className={classes.cheat}>
-            <Typography variant="h6">Методика решения задач подтемы "{name}":</Typography>
-            <RenderMarkdown>{cheat}</RenderMarkdown>
+            <Typography variant="h6">Методика решения задач подтемы "{name}"</Typography>
+            <Collapse in={cheatExpanded}>
+              <RenderMarkdown>{cheat}</RenderMarkdown>
+            </Collapse>
           </div>
         </CardContent>
-        <CardActions>
+        <CardActions className={classes.cheatContent}>
+          <div style={{flexGrow: 1}}/>
           <ReactToPrint
             content={() => cheatRef.current}
+            onBeforeGetContent={() => setCheatExpanded(true)}
             trigger={() => (
               <Button>Распечатать</Button>
             )}/>
+          <IconButton
+            className={clsx(classes.expand, {
+              [classes.expandOpen]: cheatExpanded,
+            })}
+            onClick={() => setCheatExpanded(!cheatExpanded)}>
+            <ExpandMoreIcon />
+          </IconButton>
         </CardActions>
       </Card>
-      <Typography variant="h6">Список заданий:</Typography>
-      {tasks.map((it, index) => (
+      {tasks.sort((a, b) => a["number"] - b["number"]).map((it, index) => (
         <Accordion expanded={expanded === index} onChange={handleChange(index)} key={it["id"]}>
           <AccordionSummary key={it.id}
                             expandIcon={<ExpandMoreIcon/>}
