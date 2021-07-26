@@ -191,7 +191,7 @@ function EditVariant({setTitle, resetTitle}) {
                             }
                             setVariant(await response.json())
                             setVariantPushing(false)
-                            enqueueSnackbar(`Вариант ${variant["id"] ? "создан" : "изменен"}!`, {variant: "info"})
+                            enqueueSnackbar(`Вариант ${method === "POST" ? "создан" : "изменен"}!`, {variant: "info"})
                           }).catch(error => {
                             setVariantPushing(false)
                             enqueueSnackbar("Произошла неизвестная ошибка", {variant: "error"})
