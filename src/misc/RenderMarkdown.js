@@ -20,7 +20,7 @@ function RenderMarkdown(props) {
 }
 
 RenderMarkdown.propTypes = {
-  children: PropTypes.element.isRequired,
+  children: PropTypes.string.isRequired,
 }
 
 export default RenderMarkdown

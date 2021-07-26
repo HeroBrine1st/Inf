@@ -8,6 +8,7 @@ import join from "../utils/join";
 
 
 function pluralize(number, a, b, c) {
+  if (number === 0) return c;
   if (number === 1) return a;
   if (2 <= number <= 5) return b;
   if (number > 20) return pluralize(number % 10);
