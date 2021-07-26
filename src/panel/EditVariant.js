@@ -62,7 +62,6 @@ function EditVariant({setTitle, resetTitle}) {
   const history = useHistory()
   const {enqueueSnackbar} = useSnackbar()
   const [step, setStep] = useState(0)
-  const [variantAutocompleteOpen, setVariantAutocompleteOpen] = useState(false)
   const [variants, setVariants] = useState([])
   const [variant, setVariant] = useState(null)
   const [variantName, setVariantName] = useState("")
@@ -100,12 +99,9 @@ function EditVariant({setTitle, resetTitle}) {
             <Autocomplete
               noOptionsText="Не найдено"
               loadingText="Загрузка.."
-              open={variantAutocompleteOpen}
               onOpen={() => {
-                setVariantAutocompleteOpen(true);
                 loadVariants()
               }}
-              onClose={() => setVariantAutocompleteOpen(false)}
               options={variants}
               getOptionLabel={it => it["name"]}
               getOptionSelected={(option, value) => option["id"] === value["id"]}

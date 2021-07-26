@@ -62,8 +62,7 @@ function EditTheme({setTitle, resetTitle}) {
   const history = useHistory()
   const {enqueueSnackbar} = useSnackbar()
   const [step, setStep] = useState(0)
-  const [variantAutocompleteOpen, setVariantAutocompleteOpen] = useState(false)
-  const [allVariants, setAllVariants] = useState([])
+  const [allThemes, setAllThemes] = useState([])
   const [selectedTheme, selectTheme] = useState(null)
   const [name, setName] = useState("")
   const [themesLoading, setThemesLoading] = useState(false)
@@ -75,14 +74,14 @@ function EditTheme({setTitle, resetTitle}) {
     return resetTitle
   }, [setTitle, resetTitle])
 
-  const loadVariants = () => {
+  const loadThemes = () => {
     if (themesLoading) return
     setThemesLoading(true)
-    setAllVariants([])
+    setAllThemes([])
     fetch(`${process.env.REACT_APP_API_ROOT}/themes/`).then(async response => {
       const /**Array*/result = await response.json()
       result.unshift({id: -1, name: "Создать новую"})
-      setAllVariants(result)
+      setAllThemes(result)
       setThemesLoading(false)
     }).catch(error => {
       console.error(error)
@@ -100,13 +99,10 @@ function EditTheme({setTitle, resetTitle}) {
             <Autocomplete
               noOptionsText="Не найдено"
               loadingText="Загрузка.."
-              open={variantAutocompleteOpen}
               onOpen={() => {
-                setVariantAutocompleteOpen(true);
-                loadVariants()
+                loadThemes()
               }}
-              onClose={() => setVariantAutocompleteOpen(false)}
-              options={allVariants}
+              options={allThemes}
               getOptionLabel={it => it["name"]}
               getOptionSelected={(option, value) => option["id"] === value["id"]}
               loading={themesLoading}
