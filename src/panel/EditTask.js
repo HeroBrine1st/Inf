@@ -413,7 +413,7 @@ function EditVariant({setTitle, resetTitle}) {
                             selectTask(task)
                             selectVariant(task["variant"])
                             setTaskPushing(false)
-                            enqueueSnackbar(`Задание ${method === "POST" ? "создано" : "изменено"}!`, {variant: "info"})
+                            enqueueSnackbar(`Задание ${method === "POST" ? "создано" : "изменено"}!`, {variant: "success"})
                           }).catch(error => {
                             setTaskPushing(false)
                             enqueueSnackbar("Произошла неизвестная ошибка", {variant: "error"})
@@ -451,7 +451,7 @@ function EditVariant({setTitle, resetTitle}) {
                             selectTask(null)
                           }).catch(error => {
                             setTaskPushing(false)
-                            enqueueSnackbar("Произошла неизвестная ошибка", {variant: "error"})
+                            enqueueSnackbar("Произошла неизвестная ошибка", {variant: "success"})
                             console.error(error)
                           })
                         }}>{promptDeletion ? "Точно?" : "Удалить"}</Button>

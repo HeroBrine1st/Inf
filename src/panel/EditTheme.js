@@ -188,7 +188,7 @@ function EditTheme({setTitle, resetTitle}) {
                             }
                             selectTheme(await response.json())
                             setThemePushing(false)
-                            enqueueSnackbar(`Тема ${method === "POST" ? "создана" : "изменена"}!`, {variant: "info"})
+                            enqueueSnackbar(`Тема ${method === "POST" ? "создана" : "изменена"}!`, {variant: "success"})
                           }).catch(error => {
                             setThemePushing(false)
                             enqueueSnackbar("Произошла неизвестная ошибка", {variant: "error"})
@@ -221,7 +221,7 @@ function EditTheme({setTitle, resetTitle}) {
                               console.error(response.statusText)
                               return
                             }
-                            enqueueSnackbar(`Тема удалена!`, {variant: "info"})
+                            enqueueSnackbar(`Тема удалена!`, {variant: "success"})
                             setStep(0)
                             selectTheme(null)
                           }).catch(error => {

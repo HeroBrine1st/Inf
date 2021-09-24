@@ -276,7 +276,7 @@ function EditTheme({setTitle, resetTitle}) {
                             }
                             selectSubtheme(await response.json())
                             setSubthemePushing(false)
-                            enqueueSnackbar(`Подтема ${method === "POST" ? "создана" : "изменена"}!`, {variant: "info"})
+                            enqueueSnackbar(`Подтема ${method === "POST" ? "создана" : "изменена"}!`, {variant: "success"})
                           }).catch(error => {
                             setSubthemePushing(false)
                             enqueueSnackbar("Произошла неизвестная ошибка", {variant: "error"})
@@ -309,9 +309,10 @@ function EditTheme({setTitle, resetTitle}) {
                               console.error(response.statusText)
                               return
                             }
-                            enqueueSnackbar(`Подтема удалена!`, {variant: "info"})
+                            enqueueSnackbar(`Подтема удалена!`, {variant: "success"})
                             setStep(0)
                             selectTheme(null)
+                            selectSubtheme(null)
                           }).catch(error => {
                             setSubthemePushing(false)
                             enqueueSnackbar("Произошла неизвестная ошибка", {variant: "error"})
