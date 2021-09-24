@@ -5,10 +5,11 @@ import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import HideOnScroll from "../misc/HideOnScroll";
-import {makeStyles, Menu, MenuItem} from "@material-ui/core";
+import {makeStyles} from "@material-ui/core";
 import NavigationDrawer from "./NavigationDrawer";
 import {Link} from "react-router-dom";
 import {MoreVert} from "@material-ui/icons";
+import AppBarMenu from './AppBarMenu';
 
 const useStyles = makeStyles((theme) => ({
   menuButton: {
@@ -53,15 +54,7 @@ function MainAppBar(props) {
           <IconButton edge="end" color="inherit" onClick={handleClick}>
             <MoreVert/>
           </IconButton>
-          <Menu
-            id="app-menu"
-            anchorEl={buttonAnchor}
-            keepMounted
-            open={Boolean(buttonAnchor)}
-            onClose={handleClose}
-          >
-            <MenuItem onClick={handleClose}>TODO</MenuItem>
-          </Menu>
+          <AppBarMenu buttonAnchor={buttonAnchor} handleClose={handleClose}/>
         </Toolbar>
       </AppBar>
     </HideOnScroll>
