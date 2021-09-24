@@ -1,9 +1,8 @@
-import { Dialog, DialogActions, DialogContent, DialogTitle, Menu, MenuItem, Button, DialogContentText, Typography } from "@material-ui/core"
+import { Dialog, DialogActions, DialogContent, DialogTitle, Menu, MenuItem, Button, Typography } from "@material-ui/core"
 import { useState } from "react";
 
 function AppBarMenu({ buttonAnchor, handleClose }) {
     const [dialogOpen, setDialogOpen] = useState(false);
-    console.log(process.env.REACT_APP_ABOUT.replace(/\\n/g, "\n\n"))
     return <>
         <Menu
             id="app-menu"
