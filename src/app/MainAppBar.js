@@ -48,7 +48,7 @@ function MainAppBar(props) {
             <MenuIcon/>
           </IconButton>
           <Typography variant="h6" className={classes.title} component={Link} to="/">
-            {props.title}
+            {props.title + (process.env.NODE_ENV !== 'production' ? " // Режим разработчика" : "")}
           </Typography>
           <div style={{flexGrow: 1}}/>
           <IconButton edge="end" color="inherit" onClick={handleClick}>
