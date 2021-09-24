@@ -1,4 +1,4 @@
-import {useEffect, useState} from "react";
+import { useEffect, useState } from "react";
 import {
   Button,
   CircularProgress,
@@ -9,11 +9,11 @@ import {
   Stepper,
   TextField
 } from "@material-ui/core";
-import {makeStyles} from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
 import Autocomplete from '@material-ui/lab/Autocomplete';
-import {useHistory} from "react-router";
-import {useSnackbar} from "notistack";
-import {green, red} from "@material-ui/core/colors";
+import { useHistory } from "react-router";
+import { useSnackbar } from "notistack";
+import { green, red } from "@material-ui/core/colors";
 import clsx from "clsx";
 
 const useStyles = makeStyles((theme) => ({
@@ -57,10 +57,10 @@ const useStyles = makeStyles((theme) => ({
   }
 }))
 
-function EditVariant({setTitle, resetTitle}) {
+function EditVariant({ setTitle, resetTitle }) {
   const classes = useStyles()
   const history = useHistory()
-  const {enqueueSnackbar} = useSnackbar()
+  const { enqueueSnackbar } = useSnackbar()
   const [step, setStep] = useState(0)
   const [variants, setVariants] = useState([])
   const [variant, setVariant] = useState(null)
@@ -79,15 +79,47 @@ function EditVariant({setTitle, resetTitle}) {
     setVariantsLoading(true)
     setVariants([])
     fetch(`${process.env.REACT_APP_API_ROOT}/variants/`).then(async response => {
-      if(!response.ok) throw new Error(response.statusText)
+      if (!response.ok) throw new Error(response.statusText)
       const /**Array*/result = await response.json()
-      result.unshift({id: -1, name: "Создать новый"})
+      result.unshift({ id: -1, name: "Создать новый" })
       setVariants(result)
       setVariantsLoading(false)
     }).catch(error => {
       console.error(error)
-      enqueueSnackbar("Произошла неизвестная ошибка", {variant: "error"})
+      enqueueSnackbar("Произошла неизвестная ошибка", { variant: "error" })
       history.push("/");
+    })
+  }
+
+  const pushVariant = () => {
+    setVariantPushing(true)
+    const body = JSON.stringify({
+      "name": variantName,
+    })
+    let url = `${process.env.REACT_APP_API_ROOT}/variants/`
+    if (variant["id"] !== -1) url += `${variant["id"]}/`
+    const method = variant["id"] === -1 ? "POST" : "PUT"
+    fetch(url, {
+      method: method,
+      credentials: "same-origin",
+      body: body,
+      headers: {
+        "Content-Type": "application/json"
+      }
+    }).then(async response => {
+      if (!response.ok) {
+        setVariantPushing(false)
+        enqueueSnackbar("Произошла неизвестная ошибка", { variant: "error" })
+        console.error(response.statusText)
+        return
+      }
+      setVariant(await response.json())
+      setVariantPushing(false)
+      enqueueSnackbar(`Вариант ${method === "POST" ? "создан" : "изменен"}!`, { variant: "success" })
+    }).catch(error => {
+      setVariantPushing(false)
+      enqueueSnackbar("Произошла неизвестная ошибка", { variant: "error" })
+      console.error(error)
     })
   }
 
@@ -116,11 +148,19 @@ function EditVariant({setTitle, resetTitle}) {
                   {...params}
                   label="Вариант"
                   variant="outlined"
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" && variant != null) {
+                      setStep(1);
+                      if (variant["id"] !== -1)
+                        setVariantName(variant["name"])
+                      else setVariantName("")
+                    }
+                  }}
                   InputProps={{
                     ...params.InputProps,
                     endAdornment: (
                       <>
-                        {variantsLoading ? <CircularProgress color="inherit" size={20}/> : null}
+                        {variantsLoading ? <CircularProgress color="inherit" size={20} /> : null}
                         {params.InputProps.endAdornment}
                       </>
                     ),
@@ -133,12 +173,12 @@ function EditVariant({setTitle, resetTitle}) {
                 Назад
               </Button>
               <Button variant="contained" color="primary" className={classes.button} disabled={variant == null}
-                      onClick={() => {
-                        setStep(1);
-                        if (variant["id"] !== -1)
-                          setVariantName(variant["name"])
-                        else setVariantName("")
-                      }}>Дальше</Button>
+                onClick={() => {
+                  setStep(1);
+                  if (variant["id"] !== -1)
+                    setVariantName(variant["name"])
+                  else setVariantName("")
+                }}>Дальше</Button>
             </div>
           </StepContent>
         </Step>
@@ -153,6 +193,11 @@ function EditVariant({setTitle, resetTitle}) {
               label="Название"
               variant="outlined"
               onInput={/**React.ChangeEvent<HTMLInputElement>*/event => setVariantName(event.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && variantName.length !== 0 && !variantPushing) {
+                  pushVariant()
+                }
+              }}
               value={variantName}
               error={variantName.length === 0}
               helperText={variantName.length === 0 && "Название варианта не может быть пустым!"}
@@ -163,77 +208,47 @@ function EditVariant({setTitle, resetTitle}) {
               </Button>
               <div className={classes.buttonContainer}>
                 <Button variant="contained" color="primary" className={classes.button}
-                        disabled={variantName.length === 0 || variantPushing}
-                        onClick={() => {
-                          setVariantPushing(true)
-                          const body = JSON.stringify({
-                            "name": variantName,
-                          })
-                          let url = `${process.env.REACT_APP_API_ROOT}/variants/`
-                          if (variant["id"] !== -1) url += `${variant["id"]}/`
-                          const method = variant["id"] === -1 ? "POST" : "PUT"
-                          fetch(url, {
-                            method: method,
-                            credentials: "same-origin",
-                            body: body,
-                            headers: {
-                              "Content-Type": "application/json"
-                            }
-                          }).then(async response => {
-                            if (!response.ok) {
-                              setVariantPushing(false)
-                              enqueueSnackbar("Произошла неизвестная ошибка", {variant: "error"})
-                              console.error(response.statusText)
-                              return
-                            }
-                            setVariant(await response.json())
-                            setVariantPushing(false)
-                            enqueueSnackbar(`Вариант ${method === "POST" ? "создан" : "изменен"}!`, {variant: "success"})
-                          }).catch(error => {
-                            setVariantPushing(false)
-                            enqueueSnackbar("Произошла неизвестная ошибка", {variant: "error"})
-                            console.error(error)
-                          })
-                        }}>Готово</Button>
+                  disabled={variantName.length === 0 || variantPushing}
+                  onClick={pushVariant}>Готово</Button>
                 {variantPushing && (
-                  <CircularProgress size={24} className={classes.buttonProgress}/>
+                  <CircularProgress size={24} className={classes.buttonProgress} />
                 )}
               </div>
               <div className={classes.buttonContainer}>
                 <Button variant="contained" className={clsx(classes.button, classes.deleteButton)}
-                        disabled={variantPushing || (variant && variant["id"] === -1)}
-                        onClick={() => {
-                          if (!promptDeletion) {
-                            setPromptDeletion(true)
-                            setTimeout(() => setPromptDeletion(false), 500)
-                            return
-                          }
-                          setPromptDeletion(false)
-                          setVariantPushing(true)
-                          let url = `${process.env.REACT_APP_API_ROOT}/variants/${variant["id"]}/`
-                          fetch(url, {
-                            method: "DELETE",
-                            credentials: "same-origin",
-                          }).then(response => {
-                            setVariantPushing(false)
-                            if (!response.ok) {
-                              enqueueSnackbar("Произошла неизвестная ошибка", {variant: "error"})
-                              console.error(response.statusText)
-                              return
-                            }
-                            enqueueSnackbar(`Вариант удален!`, {variant: "success"})
-                            setStep(0)
-                            setVariant(null)
-                          }).catch(error => {
-                            setVariantPushing(false)
-                            enqueueSnackbar("Произошла неизвестная ошибка", {variant: "error"})
-                            console.error(error)
-                          })
-                        }}>
+                  disabled={variantPushing || (variant && variant["id"] === -1)}
+                  onClick={() => {
+                    if (!promptDeletion) {
+                      setPromptDeletion(true)
+                      setTimeout(() => setPromptDeletion(false), 500)
+                      return
+                    }
+                    setPromptDeletion(false)
+                    setVariantPushing(true)
+                    let url = `${process.env.REACT_APP_API_ROOT}/variants/${variant["id"]}/`
+                    fetch(url, {
+                      method: "DELETE",
+                      credentials: "same-origin",
+                    }).then(response => {
+                      setVariantPushing(false)
+                      if (!response.ok) {
+                        enqueueSnackbar("Произошла неизвестная ошибка", { variant: "error" })
+                        console.error(response.statusText)
+                        return
+                      }
+                      enqueueSnackbar(`Вариант удален!`, { variant: "success" })
+                      setStep(0)
+                      setVariant(null)
+                    }).catch(error => {
+                      setVariantPushing(false)
+                      enqueueSnackbar("Произошла неизвестная ошибка", { variant: "error" })
+                      console.error(error)
+                    })
+                  }}>
                   {promptDeletion ? "Точно?" : "Удалить"}
                 </Button>
                 {variantPushing && (
-                  <CircularProgress size={24} className={classes.buttonProgress}/>
+                  <CircularProgress size={24} className={classes.buttonProgress} />
                 )}
               </div>
             </div>

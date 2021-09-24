@@ -1,4 +1,4 @@
-import {useEffect, useState} from "react";
+import { useEffect, useState } from "react";
 import {
   Button,
   CircularProgress,
@@ -9,11 +9,11 @@ import {
   Stepper,
   TextField
 } from "@material-ui/core";
-import {makeStyles} from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
 import Autocomplete from '@material-ui/lab/Autocomplete';
-import {useHistory} from "react-router";
-import {useSnackbar} from "notistack";
-import {green, red} from "@material-ui/core/colors";
+import { useHistory } from "react-router";
+import { useSnackbar } from "notistack";
+import { green, red } from "@material-ui/core/colors";
 import clsx from "clsx";
 
 const useStyles = makeStyles((theme) => ({
@@ -57,10 +57,10 @@ const useStyles = makeStyles((theme) => ({
   }
 }))
 
-function EditTheme({setTitle, resetTitle}) {
+function EditTheme({ setTitle, resetTitle }) {
   const classes = useStyles()
   const history = useHistory()
-  const {enqueueSnackbar} = useSnackbar()
+  const { enqueueSnackbar } = useSnackbar()
   const [step, setStep] = useState(0)
   const [allThemes, setAllThemes] = useState([])
   const [selectedTheme, selectTheme] = useState(null)
@@ -79,15 +79,47 @@ function EditTheme({setTitle, resetTitle}) {
     setThemesLoading(true)
     setAllThemes([])
     fetch(`${process.env.REACT_APP_API_ROOT}/themes/`).then(async response => {
-      if(!response.ok) throw new Error(response.statusText)
+      if (!response.ok) throw new Error(response.statusText)
       const /**Array*/result = await response.json()
-      result.unshift({id: -1, name: "Создать новую"})
+      result.unshift({ id: -1, name: "Создать новую" })
       setAllThemes(result)
       setThemesLoading(false)
     }).catch(error => {
       console.error(error)
-      enqueueSnackbar("Произошла неизвестная ошибка", {variant: "error"})
+      enqueueSnackbar("Произошла неизвестная ошибка", { variant: "error" })
       history.push("/");
+    })
+  }
+
+  const pushTheme = () => () => {
+    setThemePushing(true)
+    const body = JSON.stringify({
+      "name": name,
+    })
+    let url = `${process.env.REACT_APP_API_ROOT}/themes/`
+    if (selectedTheme["id"] !== -1) url += `${selectedTheme["id"]}/`
+    const method = selectedTheme["id"] === -1 ? "POST" : "PUT"
+    fetch(url, {
+      method: method,
+      credentials: "same-origin",
+      body: body,
+      headers: {
+        "Content-Type": "application/json"
+      }
+    }).then(async response => {
+      if (!response.ok) {
+        setThemePushing(false)
+        enqueueSnackbar("Произошла неизвестная ошибка", { variant: "error" })
+        console.error(response.statusText)
+        return
+      }
+      selectTheme(await response.json())
+      setThemePushing(false)
+      enqueueSnackbar(`Тема ${method === "POST" ? "создана" : "изменена"}!`, { variant: "success" })
+    }).catch(error => {
+      setThemePushing(false)
+      enqueueSnackbar("Произошла неизвестная ошибка", { variant: "error" })
+      console.error(error)
     })
   }
 
@@ -116,11 +148,19 @@ function EditTheme({setTitle, resetTitle}) {
                   {...params}
                   label="Тема"
                   variant="outlined"
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" && selectedTheme != null) {
+                      setStep(1);
+                      if (selectedTheme["id"] !== -1)
+                        setName(selectedTheme["name"])
+                      else setName("")
+                    }
+                  }}
                   InputProps={{
                     ...params.InputProps,
                     endAdornment: (
                       <>
-                        {themesLoading ? <CircularProgress color="inherit" size={20}/> : null}
+                        {themesLoading ? <CircularProgress color="inherit" size={20} /> : null}
                         {params.InputProps.endAdornment}
                       </>
                     ),
@@ -133,12 +173,12 @@ function EditTheme({setTitle, resetTitle}) {
                 Назад
               </Button>
               <Button variant="contained" color="primary" className={classes.button} disabled={selectedTheme == null}
-                      onClick={() => {
-                        setStep(1);
-                        if (selectedTheme["id"] !== -1)
-                          setName(selectedTheme["name"])
-                        else setName("")
-                      }}>Дальше</Button>
+                onClick={() => {
+                  setStep(1);
+                  if (selectedTheme["id"] !== -1)
+                    setName(selectedTheme["name"])
+                  else setName("")
+                }}>Дальше</Button>
             </div>
           </StepContent>
         </Step>
@@ -153,6 +193,11 @@ function EditTheme({setTitle, resetTitle}) {
               label="Название"
               variant="outlined"
               onInput={/**React.ChangeEvent<HTMLInputElement>*/event => setName(event.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && name.length !== 0 && !themePushing) {
+                  pushTheme()
+                }
+              }}
               value={name}
               error={name.length === 0}
               helperText={name.length === 0 && "Название темы не может быть пустым!"}
@@ -163,77 +208,47 @@ function EditTheme({setTitle, resetTitle}) {
               </Button>
               <div className={classes.buttonContainer}>
                 <Button variant="contained" color="primary" className={classes.button}
-                        disabled={name.length === 0 || themePushing}
-                        onClick={() => {
-                          setThemePushing(true)
-                          const body = JSON.stringify({
-                            "name": name,
-                          })
-                          let url = `${process.env.REACT_APP_API_ROOT}/themes/`
-                          if (selectedTheme["id"] !== -1) url += `${selectedTheme["id"]}/`
-                          const method = selectedTheme["id"] === -1 ? "POST" : "PUT"
-                          fetch(url, {
-                            method: method,
-                            credentials: "same-origin",
-                            body: body,
-                            headers: {
-                              "Content-Type": "application/json"
-                            }
-                          }).then(async response => {
-                            if (!response.ok) {
-                              setThemePushing(false)
-                              enqueueSnackbar("Произошла неизвестная ошибка", {variant: "error"})
-                              console.error(response.statusText)
-                              return
-                            }
-                            selectTheme(await response.json())
-                            setThemePushing(false)
-                            enqueueSnackbar(`Тема ${method === "POST" ? "создана" : "изменена"}!`, {variant: "success"})
-                          }).catch(error => {
-                            setThemePushing(false)
-                            enqueueSnackbar("Произошла неизвестная ошибка", {variant: "error"})
-                            console.error(error)
-                          })
-                        }}>Готово</Button>
+                  disabled={name.length === 0 || themePushing}
+                  onClick={pushTheme}>Готово</Button>
                 {themePushing && (
-                  <CircularProgress size={24} className={classes.buttonProgress}/>
+                  <CircularProgress size={24} className={classes.buttonProgress} />
                 )}
               </div>
               <div className={classes.buttonContainer}>
                 <Button variant="contained" className={clsx(classes.button, classes.deleteButton)}
-                        disabled={themePushing || (selectedTheme && selectedTheme["id"] === -1)}
-                        onClick={() => {
-                          if (!promptDeletion) {
-                            setPromptDeletion(true)
-                            setTimeout(() => setPromptDeletion(false), 500)
-                            return
-                          }
-                          setPromptDeletion(false)
-                          setThemePushing(true)
-                          let url = `${process.env.REACT_APP_API_ROOT}/themes/${selectedTheme["id"]}/`
-                          fetch(url, {
-                            method: "DELETE",
-                            credentials: "same-origin",
-                          }).then(response => {
-                            setThemePushing(false)
-                            if (!response.ok) {
-                              enqueueSnackbar("Произошла неизвестная ошибка", {variant: "error"})
-                              console.error(response.statusText)
-                              return
-                            }
-                            enqueueSnackbar(`Тема удалена!`, {variant: "success"})
-                            setStep(0)
-                            selectTheme(null)
-                          }).catch(error => {
-                            setThemePushing(false)
-                            enqueueSnackbar("Произошла неизвестная ошибка", {variant: "error"})
-                            console.error(error)
-                          })
-                        }}>
+                  disabled={themePushing || (selectedTheme && selectedTheme["id"] === -1)}
+                  onClick={() => {
+                    if (!promptDeletion) {
+                      setPromptDeletion(true)
+                      setTimeout(() => setPromptDeletion(false), 500)
+                      return
+                    }
+                    setPromptDeletion(false)
+                    setThemePushing(true)
+                    let url = `${process.env.REACT_APP_API_ROOT}/themes/${selectedTheme["id"]}/`
+                    fetch(url, {
+                      method: "DELETE",
+                      credentials: "same-origin",
+                    }).then(response => {
+                      setThemePushing(false)
+                      if (!response.ok) {
+                        enqueueSnackbar("Произошла неизвестная ошибка", { variant: "error" })
+                        console.error(response.statusText)
+                        return
+                      }
+                      enqueueSnackbar(`Тема удалена!`, { variant: "success" })
+                      setStep(0)
+                      selectTheme(null)
+                    }).catch(error => {
+                      setThemePushing(false)
+                      enqueueSnackbar("Произошла неизвестная ошибка", { variant: "error" })
+                      console.error(error)
+                    })
+                  }}>
                   {promptDeletion ? "Точно?" : "Удалить"}
                 </Button>
                 {themePushing && (
-                  <CircularProgress size={24} className={classes.buttonProgress}/>
+                  <CircularProgress size={24} className={classes.buttonProgress} />
                 )}
               </div>
             </div>

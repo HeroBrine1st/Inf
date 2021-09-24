@@ -1,4 +1,4 @@
-import {useEffect, useState} from "react";
+import { useEffect, useState } from "react";
 import {
   Button,
   CircularProgress,
@@ -9,11 +9,11 @@ import {
   Stepper,
   TextField
 } from "@material-ui/core";
-import {makeStyles} from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
 import Autocomplete from '@material-ui/lab/Autocomplete';
-import {useHistory} from "react-router";
-import {useSnackbar} from "notistack";
-import {green, red} from "@material-ui/core/colors";
+import { useHistory } from "react-router";
+import { useSnackbar } from "notistack";
+import { green, red } from "@material-ui/core/colors";
 import clsx from "clsx";
 
 const useStyles = makeStyles((theme) => ({
@@ -57,10 +57,10 @@ const useStyles = makeStyles((theme) => ({
   }
 }))
 
-function EditTheme({setTitle, resetTitle}) {
+function EditTheme({ setTitle, resetTitle }) {
   const classes = useStyles()
   const history = useHistory()
-  const {enqueueSnackbar} = useSnackbar()
+  const { enqueueSnackbar } = useSnackbar()
   const [step, setStep] = useState(0)
 
   // Step 1
@@ -93,7 +93,7 @@ function EditTheme({setTitle, resetTitle}) {
       setThemesLoading(false)
     }).catch(error => {
       console.error(error)
-      enqueueSnackbar("Произошла неизвестная ошибка", {variant: "error"})
+      enqueueSnackbar("Произошла неизвестная ошибка", { variant: "error" })
       history.push("/");
     })
   }
@@ -103,7 +103,7 @@ function EditTheme({setTitle, resetTitle}) {
     setSubthemesLoading(true)
     setAllSubthemes([])
     fetch(`${process.env.REACT_APP_API_ROOT}/themes/${selectedTheme["id"]}/subthemes/`).then(async response => {
-      if(!response.ok) throw new Error(response.statusText)
+      if (!response.ok) throw new Error(response.statusText)
       const /**Array*/result = await response.json()
       result.unshift({
         id: -1,
@@ -114,7 +114,7 @@ function EditTheme({setTitle, resetTitle}) {
       setSubthemesLoading(false)
     }).catch(error => {
       console.error(error)
-      enqueueSnackbar("Произошла неизвестная ошибка", {variant: "error"})
+      enqueueSnackbar("Произошла неизвестная ошибка", { variant: "error" })
       history.push("/");
     })
   }
@@ -144,11 +144,16 @@ function EditTheme({setTitle, resetTitle}) {
                   {...params}
                   label="Тема"
                   variant="outlined"
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" && selectedTheme != null) {
+                      setStep(1);
+                    }
+                  }}
                   InputProps={{
                     ...params.InputProps,
                     endAdornment: (
                       <>
-                        {themesLoading ? <CircularProgress color="inherit" size={20}/> : null}
+                        {themesLoading ? <CircularProgress color="inherit" size={20} /> : null}
                         {params.InputProps.endAdornment}
                       </>
                     ),
@@ -161,9 +166,9 @@ function EditTheme({setTitle, resetTitle}) {
                 Назад
               </Button>
               <Button variant="contained" color="primary" className={classes.button} disabled={selectedTheme == null}
-                      onClick={() => {
-                        setStep(1);
-                      }}>Дальше</Button>
+                onClick={() => {
+                  setStep(1);
+                }}>Дальше</Button>
             </div>
           </StepContent>
         </Step>
@@ -189,11 +194,19 @@ function EditTheme({setTitle, resetTitle}) {
                   {...params}
                   label="Подтема"
                   variant="outlined"
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" && selectedSubtheme != null) {
+                      setStep(2);
+                      if (selectedSubtheme["id"] === -1) setName("")
+                      else setName(selectedSubtheme["name"])
+                      setCheat(selectedSubtheme["cheat"])
+                    }
+                  }}
                   InputProps={{
                     ...params.InputProps,
                     endAdornment: (
                       <>
-                        {themesLoading ? <CircularProgress color="inherit" size={20}/> : null}
+                        {themesLoading ? <CircularProgress color="inherit" size={20} /> : null}
                         {params.InputProps.endAdornment}
                       </>
                     ),
@@ -206,12 +219,12 @@ function EditTheme({setTitle, resetTitle}) {
                 Назад
               </Button>
               <Button variant="contained" color="primary" className={classes.button} disabled={selectedSubtheme == null}
-                      onClick={() => {
-                        setStep(2);
-                        if(selectedSubtheme["id"] === -1) setName("")
-                        else setName(selectedSubtheme["name"])
-                        setCheat(selectedSubtheme["cheat"])
-                      }}>Дальше</Button>
+                onClick={() => {
+                  setStep(2);
+                  if (selectedSubtheme["id"] === -1) setName("")
+                  else setName(selectedSubtheme["name"])
+                  setCheat(selectedSubtheme["cheat"])
+                }}>Дальше</Button>
             </div>
           </StepContent>
         </Step>
@@ -243,86 +256,86 @@ function EditTheme({setTitle, resetTitle}) {
               value={cheat}
               error={cheat.length === 0}
               helperText={cheat.length === 0 && "Методика решения не может быть пустой!"}
-              multiline rowsMax={7}/>
+              multiline rowsMax={7} />
             <div className={classes.actionsContainer}>
               <Button className={classes.button} onClick={() => setStep(1)}>
                 Назад
               </Button>
               <div className={classes.buttonContainer}>
                 <Button variant="contained" color="primary" className={classes.button}
-                        disabled={name.length === 0 || subthemePushing}
-                        onClick={() => {
-                          setSubthemePushing(true)
-                          const body = JSON.stringify({
-                            "name": name,
-                            "cheat": cheat,
-                          })
-                          let url = `${process.env.REACT_APP_API_ROOT}/themes/${selectedTheme["id"]}/subthemes/`
-                          if (selectedSubtheme["id"] !== -1) url += `${selectedSubtheme["id"]}/`
-                          const method = selectedSubtheme["id"] === -1 ? "POST" : "PUT"
-                          fetch(url, {
-                            method: method,
-                            credentials: "same-origin",
-                            body: body,
-                            headers: {
-                              "Content-Type": "application/json"
-                            }
-                          }).then(async response => {
-                            if (!response.ok) {
-                              setSubthemePushing(false)
-                              enqueueSnackbar("Произошла неизвестная ошибка", {variant: "error"})
-                              console.error(response.statusText)
-                              return
-                            }
-                            selectSubtheme(await response.json())
-                            setSubthemePushing(false)
-                            enqueueSnackbar(`Подтема ${method === "POST" ? "создана" : "изменена"}!`, {variant: "success"})
-                          }).catch(error => {
-                            setSubthemePushing(false)
-                            enqueueSnackbar("Произошла неизвестная ошибка", {variant: "error"})
-                            console.error(error)
-                          })
-                        }}>Готово</Button>
+                  disabled={name.length === 0 || subthemePushing}
+                  onClick={() => {
+                    setSubthemePushing(true)
+                    const body = JSON.stringify({
+                      "name": name,
+                      "cheat": cheat,
+                    })
+                    let url = `${process.env.REACT_APP_API_ROOT}/themes/${selectedTheme["id"]}/subthemes/`
+                    if (selectedSubtheme["id"] !== -1) url += `${selectedSubtheme["id"]}/`
+                    const method = selectedSubtheme["id"] === -1 ? "POST" : "PUT"
+                    fetch(url, {
+                      method: method,
+                      credentials: "same-origin",
+                      body: body,
+                      headers: {
+                        "Content-Type": "application/json"
+                      }
+                    }).then(async response => {
+                      if (!response.ok) {
+                        setSubthemePushing(false)
+                        enqueueSnackbar("Произошла неизвестная ошибка", { variant: "error" })
+                        console.error(response.statusText)
+                        return
+                      }
+                      selectSubtheme(await response.json())
+                      setSubthemePushing(false)
+                      enqueueSnackbar(`Подтема ${method === "POST" ? "создана" : "изменена"}!`, { variant: "success" })
+                    }).catch(error => {
+                      setSubthemePushing(false)
+                      enqueueSnackbar("Произошла неизвестная ошибка", { variant: "error" })
+                      console.error(error)
+                    })
+                  }}>Готово</Button>
                 {subthemePushing && (
-                  <CircularProgress size={24} className={classes.buttonProgress}/>
+                  <CircularProgress size={24} className={classes.buttonProgress} />
                 )}
               </div>
               <div className={classes.buttonContainer}>
                 <Button variant="contained" className={clsx(classes.button, classes.deleteButton)}
-                        disabled={subthemePushing || (selectedSubtheme && selectedSubtheme["id"] === -1)}
-                        onClick={() => {
-                          if (!promptDeletion) {
-                            setPromptDeletion(true)
-                            setTimeout(() => setPromptDeletion(false), 500)
-                            return
-                          }
-                          setPromptDeletion(false)
-                          setSubthemePushing(true)
-                          let url = `${process.env.REACT_APP_API_ROOT}/themes/${selectedTheme["id"]}/subthemes/${selectedSubtheme["id"]}`
-                          fetch(url, {
-                            method: "DELETE",
-                            credentials: "same-origin",
-                          }).then(response => {
-                            setSubthemePushing(false)
-                            if (!response.ok) {
-                              enqueueSnackbar("Произошла неизвестная ошибка", {variant: "error"})
-                              console.error(response.statusText)
-                              return
-                            }
-                            enqueueSnackbar(`Подтема удалена!`, {variant: "success"})
-                            setStep(0)
-                            selectTheme(null)
-                            selectSubtheme(null)
-                          }).catch(error => {
-                            setSubthemePushing(false)
-                            enqueueSnackbar("Произошла неизвестная ошибка", {variant: "error"})
-                            console.error(error)
-                          })
-                        }}>
+                  disabled={subthemePushing || (selectedSubtheme && selectedSubtheme["id"] === -1)}
+                  onClick={() => {
+                    if (!promptDeletion) {
+                      setPromptDeletion(true)
+                      setTimeout(() => setPromptDeletion(false), 500)
+                      return
+                    }
+                    setPromptDeletion(false)
+                    setSubthemePushing(true)
+                    let url = `${process.env.REACT_APP_API_ROOT}/themes/${selectedTheme["id"]}/subthemes/${selectedSubtheme["id"]}`
+                    fetch(url, {
+                      method: "DELETE",
+                      credentials: "same-origin",
+                    }).then(response => {
+                      setSubthemePushing(false)
+                      if (!response.ok) {
+                        enqueueSnackbar("Произошла неизвестная ошибка", { variant: "error" })
+                        console.error(response.statusText)
+                        return
+                      }
+                      enqueueSnackbar(`Подтема удалена!`, { variant: "success" })
+                      setStep(0)
+                      selectTheme(null)
+                      selectSubtheme(null)
+                    }).catch(error => {
+                      setSubthemePushing(false)
+                      enqueueSnackbar("Произошла неизвестная ошибка", { variant: "error" })
+                      console.error(error)
+                    })
+                  }}>
                   {promptDeletion ? "Точно?" : "Удалить"}
                 </Button>
                 {subthemePushing && (
-                  <CircularProgress size={24} className={classes.buttonProgress}/>
+                  <CircularProgress size={24} className={classes.buttonProgress} />
                 )}
               </div>
             </div>
