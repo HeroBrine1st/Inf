@@ -15,6 +15,7 @@ import { useSnackbar } from "notistack";
 import { green, red } from "@material-ui/core/colors";
 import RenderMarkdown from "../misc/RenderMarkdown";
 import clsx from "clsx";
+import truncate from "../utils/truncate";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -211,7 +212,7 @@ function EditVariant({ setTitle, resetTitle }) {
               options={allTasks}
               getOptionLabel={it => {
                 if (it["id"] === -1) return "Создать новое"
-                else return `Вариант №${it["number"]}: ${it["content"]}`;
+                else return `Задание №${it["number"]}: ${truncate(it["content"], 96)}`;
               }}
               getOptionSelected={(option, value) => option["id"] === value["id"]}
               loading={tasksLoading}

@@ -10,7 +10,7 @@ function AppBarMenu({ buttonAnchor, handleClose }) {
             keepMounted
             open={Boolean(buttonAnchor)}
             onClose={handleClose}>
-            <MenuItem onClick={() => {
+            <MenuItem key="1" onClick={() => {
                 handleClose()
                 setDialogOpen(true)
             }}>About</MenuItem>
