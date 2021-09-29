@@ -6,7 +6,9 @@ import rehypeKatex from "rehype-katex";
 import 'katex/dist/katex.min.css'
 
 const useStyles = makeStyles(() => ({
-  markdown: {}, // Без стиля компонент не создаст свой <div/>
+  markdown: {
+    overflow: "auto",
+  }, // Без стиля компонент не создаст свой <div/>
 }))
 
 function RenderMarkdown(props) {
