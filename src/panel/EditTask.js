@@ -111,7 +111,7 @@ function EditVariant({ setTitle, resetTitle }) {
     setTasksLoading(true)
     setAllTasks([])
     fetch(`${process.env.REACT_APP_API_ROOT}/variants/${selectedVariant["id"]}/tasks/`).then(async response => {
-      const tasks = await response.json()
+      const tasks = /**array*/await response.json()
       tasks.unshift({
         id: -1,
         subtheme: null,
@@ -120,7 +120,8 @@ function EditVariant({ setTitle, resetTitle }) {
         variant: selectedVariant,
         number: -1,
       })
-      setAllTasks(tasks)
+      
+      setAllTasks(tasks.sort((a, b) => a.number - b.number))
       setTasksLoading(false)
     }).catch(error => {
       console.error(error)

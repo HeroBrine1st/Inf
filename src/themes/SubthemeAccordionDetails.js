@@ -1,24 +1,28 @@
 import DownloadingJson from "../misc/DownloadingJson";
-import {useState} from "react";
+import { useState } from "react";
 import Typography from "@material-ui/core/Typography";
-import {Collapse} from "@material-ui/core";
-import {Link} from "react-router-dom";
-import {useRouteMatch} from "react-router";
+import { Collapse } from "@material-ui/core";
+import { Link } from "react-router-dom";
+import { useRouteMatch } from "react-router";
 import join from "../utils/join";
 
-
+// a - именительный
+// b - родительный
+// c - родительный множественный
 function pluralize(number, a, b, c) {
   if (number === 0) return c;
   if (number === 1) return a;
-  if (2 <= number <= 5) return b;
+  if (2 <= number && number <= 4)
+    return b;
   if (number > 20) return pluralize(number % 10);
-  if (number > 5) return c;
+  if (number >= 5)
+    return c;
 }
 
 function SubthemeAccordionDetails(props) {
   const [subthemes, setSubthemes] = useState([])
   const [collapseIn, setCollapseIn] = useState(false)
-  const {url} = useRouteMatch()
+  const { url } = useRouteMatch()
   return <DownloadingJson
     onResult={it => {
       setSubthemes(it)
