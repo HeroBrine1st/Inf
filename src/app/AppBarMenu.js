@@ -6,6 +6,7 @@ function AppBarMenu({ buttonAnchor, handleClose }) {
     return <>
         <Menu
             id="app-menu"
+            key="app-menu"
             anchorEl={buttonAnchor}
             keepMounted
             open={Boolean(buttonAnchor)}

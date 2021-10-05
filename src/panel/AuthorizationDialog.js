@@ -116,7 +116,7 @@ function AuthorizationDialog({handleAuthorized, open, handleClose}) {
     setError(false)
     setter(event.target.value)
   }
-  const handleButtonClick = () => {
+  const authorize = () => {
     if (!loading || !success) {
       if (username.length === 0) {
         setUsernameError("Имя пользователя не может быть пустым!")
@@ -198,6 +198,11 @@ function AuthorizationDialog({handleAuthorized, open, handleClose}) {
             }}
             error={passwordError.length !== 0}
             helperText={passwordError}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" && !loading) {
+                authorize()
+              }
+            }}
           />
         </div>
       </DialogContent>
@@ -208,7 +213,7 @@ function AuthorizationDialog({handleAuthorized, open, handleClose}) {
           </Button>
         </Grow>
         <div className={classes.buttonContainer}>
-          <Button color="primary" variant="contained" onClick={handleButtonClick}
+          <Button color="primary" variant="contained" onClick={authorize}
                   disabled={loading} className={buttonClassname}>
             Войти
           </Button>
