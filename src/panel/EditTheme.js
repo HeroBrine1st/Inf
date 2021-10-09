@@ -91,7 +91,7 @@ function EditTheme({ setTitle, resetTitle }) {
     })
   }
 
-  const pushTheme = () => () => {
+  const pushTheme = () => {
     setThemePushing(true)
     const body = JSON.stringify({
       "name": name,
