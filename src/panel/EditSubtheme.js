@@ -74,6 +74,7 @@ function EditTheme({ setTitle, resetTitle }) {
   const [allSubthemes, setAllSubthemes] = useState([])
 
   // Step 3
+  const [subthemeTheme, selectSubthemeTheme] = useState(null)
   const [name, setName] = useState("")
   const [cheat, setCheat] = useState("")
   const [subthemePushing, setSubthemePushing] = useState(false)
@@ -215,7 +216,10 @@ function EditTheme({ setTitle, resetTitle }) {
               )}
             />
             <div className={classes.actionsContainer}>
-              <Button className={classes.button} onClick={() => setStep(0)}>
+              <Button className={classes.button} onClick={() => {
+                setStep(0)
+                selectSubtheme(null)
+              }}>
                 Назад
               </Button>
               <Button variant="contained" color="primary" className={classes.button} disabled={selectedSubtheme == null}
@@ -224,6 +228,7 @@ function EditTheme({ setTitle, resetTitle }) {
                   if (selectedSubtheme["id"] === -1) setName("")
                   else setName(selectedSubtheme["name"])
                   setCheat(selectedSubtheme["cheat"])
+                  selectSubthemeTheme(selectedTheme)
                 }}>Дальше</Button>
             </div>
           </StepContent>
@@ -231,6 +236,38 @@ function EditTheme({ setTitle, resetTitle }) {
         <Step key={2}>
           <StepLabel>Введите значения</StepLabel>
           <StepContent>
+            <Autocomplete
+              noOptionsText="Не найдено"
+              loadingText="Загрузка.."
+              onOpen={() => {
+                loadThemes()
+              }}
+              options={allThemes}
+              getOptionLabel={it => it["name"]}
+              getOptionSelected={(option, value) => option["id"] === value["id"]}
+              loading={themesLoading}
+              onChange={(event, newValue) => {
+                selectSubthemeTheme(newValue)
+              }}
+              value={subthemeTheme}
+              renderInput={params => (
+                <TextField
+                  {...params}
+                  className={classes.textField}
+                  label="Тема"
+                  variant="outlined"
+                  InputProps={{
+                    ...params.InputProps,
+                    endAdornment: (
+                      <>
+                        {themesLoading ? <CircularProgress color="inherit" size={20} /> : null}
+                        {params.InputProps.endAdornment}
+                      </>
+                    ),
+                  }}
+                />
+              )}
+            />
             <TextField
               className={classes.textField}
               fullWidth
@@ -269,6 +306,7 @@ function EditTheme({ setTitle, resetTitle }) {
                     const body = JSON.stringify({
                       "name": name,
                       "cheat": cheat,
+                      "theme_id": subthemeTheme["id"]
                     })
                     let url = `${process.env.REACT_APP_API_ROOT}/themes/${selectedTheme["id"]}/subthemes/`
                     if (selectedSubtheme["id"] !== -1) url += `${selectedSubtheme["id"]}/`

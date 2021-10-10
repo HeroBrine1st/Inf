@@ -4,11 +4,12 @@ import PropTypes from "prop-types";
 import remarkMath from "remark-math";
 import rehypeKatex from "rehype-katex";
 import 'katex/dist/katex.min.css'
+import "./Markdown.css";
 
 const useStyles = makeStyles(() => ({
   markdown: {
     overflow: "auto",
-  }, // Без стиля компонент не создаст свой <div/>
+  }
 }))
 
 function RenderMarkdown(props) {

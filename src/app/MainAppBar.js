@@ -58,7 +58,6 @@ function MainAppBar(props) {
         </Toolbar>
       </AppBar>
     </HideOnScroll>
-    <Toolbar/>
     <NavigationDrawer open={drawer} onClose={() => setDrawer(false)} title={props.navDrawerTitle}/>
   </>;
 }

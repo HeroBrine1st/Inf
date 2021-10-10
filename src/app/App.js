@@ -1,16 +1,17 @@
 import MainAppBar from "./MainAppBar";
 import Main from "../main/Main";
-import {BrowserRouter} from "react-router-dom"
-import {Route, Switch} from "react-router"
+import { BrowserRouter } from "react-router-dom"
+import { Route, Switch } from "react-router"
 import Variants from "../variants/Variants";
-import {SnackbarProvider} from "notistack";
-import {useCallback, useEffect, useState} from "react";
+import { SnackbarProvider } from "notistack";
+import { useCallback, useEffect, useState } from "react";
 import React from "react";
-import {makeStyles} from "@material-ui/core/styles";
-import {Button, useMediaQuery, useTheme} from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
+import { Button, useMediaQuery, useTheme } from "@material-ui/core";
 import PageNotFound from "./PageNotFound";
 import Themes from "../themes/Themes";
 import Overview from "../panel/Overview";
+import Toolbar from '@material-ui/core/Toolbar';
 
 const useStyles = makeStyles((theme) => ({
   app: {
@@ -58,23 +59,24 @@ function App() {
       <Button onClick={() => notistackRef.current.closeSnackbar(key)} className={classes.dismissButton}>Понятно</Button>)}>
     <BrowserRouter>
       <div className={classes.app}>
-        <MainAppBar title={title} navDrawerTitle={process.env.REACT_APP_TITLE}/>
+        <MainAppBar title={title} navDrawerTitle={process.env.REACT_APP_TITLE} />
         <div className={classes.container}>
+          <Toolbar />
           <Switch>
             <Route exact path="/">
-              <Main/>
+              <Main />
             </Route>
             <Route path="/variants/">
-              <Variants setTitle={setTitle} resetTitle={resetTitle}/>
+              <Variants setTitle={setTitle} resetTitle={resetTitle} />
             </Route>
             <Route path="/themes/">
-              <Themes setTitle={setTitle} resetTitle={resetTitle}/>
+              <Themes setTitle={setTitle} resetTitle={resetTitle} />
             </Route>
             <Route path="/panel/">
-              <Overview setTitle={setTitle} resetTitle={resetTitle}/>
+              <Overview setTitle={setTitle} resetTitle={resetTitle} />
             </Route>
             <Route path="*"> {/*404*/}
-              <PageNotFound/>
+              <PageNotFound />
             </Route>
           </Switch>
         </div>

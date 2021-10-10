@@ -105,7 +105,7 @@ function Subtheme(props) {
       setName(it["name"])
       setCheat(it["cheat"])
     }, [])}
-    url={`${process.env.REACT_APP_API_ROOT}/themes/${themeId}/subthemes/${subthemeId}`}>
+    url={`${process.env.REACT_APP_API_ROOT}/themes/${themeId}/subthemes/${subthemeId}/`}>
     <div className={classes.root}>
       <Card className={classes.cheatPaper}>
         <CardContent>
