@@ -129,7 +129,7 @@ function Subtheme(props) {
               [classes.expandOpen]: cheatExpanded,
             })}
             onClick={() => setCheatExpanded(!cheatExpanded)}>
-            <ExpandMoreIcon />
+            <ExpandMoreIcon/>
           </IconButton>
         </CardActions>
       </Card>
@@ -150,10 +150,12 @@ function Subtheme(props) {
             </RenderMarkdown>
           </AccordionDetails>
           <AccordionActions>
-            <Button variant="outlined" color="secondary" onClick={() => {
-              setDialogContent(it["solution"])
-              openDialog(true)
-            }}>Решение</Button>
+            <Button variant="outlined" color="secondary"
+                    disabled={it["solution"] === "" || it["solution"] === "Без решения"}
+                    onClick={() => {
+                      setDialogContent(it["solution"])
+                      openDialog(true)
+                    }}>Ответ</Button>
           </AccordionActions>
         </Accordion>
       ))}

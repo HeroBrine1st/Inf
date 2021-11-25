@@ -54,6 +54,7 @@ function DownloadingJson({
       credentials: "same-origin"
     }).then(async response => {
       if (!response.ok) {
+        console.log(`Unsuccessful HTTP request: GET ${url} - code ${response.status}`)
         if(!pending) return
         if (response.status === 404) {
           setState(ERROR)

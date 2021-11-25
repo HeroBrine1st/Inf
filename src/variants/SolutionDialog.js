@@ -10,7 +10,7 @@ import RenderMarkdown from "../misc/RenderMarkdown";
 function SolutionDialog(props) {
   return <Dialog open={props.open} onClose={props.onClose} fullWidth>
     <DialogTitle>
-      Решение
+      Ответ
     </DialogTitle>
     <DialogContent>
       {/*<DialogContentText>*/}

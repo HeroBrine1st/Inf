@@ -79,7 +79,7 @@ function NavigationDrawer(props) {
         <ListSubheader>Управление</ListSubheader>
         <DownloadingJson
           onResult={() => setAuthorized(true)}
-          url={`${process.env.REACT_APP_API_ROOT}/checkauth/`}
+          url={`${process.env.REACT_APP_API_ROOT}/checkauth`}
           onError={() => {
             setAuthDisabled(true) // No connection to server
             return true
@@ -115,8 +115,7 @@ function NavigationDrawer(props) {
                 <ListItemText>Редактирование подтем</ListItemText>
               </ListItem>
             </> :
-            (!authDisabled &&
-
+            (!authDisabled ?
               <ListItem button key="auth" onClick={() => {
                 setOpenAuthDialog(true);
                 props.onClose()
@@ -128,7 +127,16 @@ function NavigationDrawer(props) {
                     <HelpOutline/>
                   </Tooltip>
                 </ListItemSecondaryAction>
-              </ListItem>
+              </ListItem> :
+                <ListItem key="auth_disabled">
+                  <ListItemIcon><AccountBox/></ListItemIcon>
+                  <ListItemText>Заблокировано</ListItemText>
+                  <ListItemSecondaryAction>
+                    <Tooltip title="Для разработчиков" placement="right" arrow>
+                      <HelpOutline/>
+                    </Tooltip>
+                  </ListItemSecondaryAction>
+                </ListItem>
             )
           }
         </DownloadingJson>

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import {useEffect, useState} from "react";
 import {
   Button,
   CircularProgress, Dialog, DialogActions, DialogContent, DialogTitle, Grid, Paper,
@@ -6,13 +6,13 @@ import {
   StepContent,
   StepLabel,
   Stepper,
-  TextField
+  TextField, Tooltip
 } from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
+import {makeStyles} from "@material-ui/core/styles";
 import Autocomplete from '@material-ui/lab/Autocomplete';
-import { useHistory } from "react-router";
-import { useSnackbar } from "notistack";
-import { green, red } from "@material-ui/core/colors";
+import {useHistory} from "react-router";
+import {useSnackbar} from "notistack";
+import {green, red} from "@material-ui/core/colors";
 import RenderMarkdown from "../misc/RenderMarkdown";
 import clsx from "clsx";
 import truncate from "../utils/truncate";
@@ -58,10 +58,10 @@ const useStyles = makeStyles((theme) => ({
   }
 }))
 
-function EditVariant({ setTitle, resetTitle }) {
+function EditVariant({setTitle, resetTitle}) {
   const classes = useStyles()
   const history = useHistory()
-  const { enqueueSnackbar } = useSnackbar()
+  const {enqueueSnackbar} = useSnackbar()
   const [step, setStep] = useState(0)
 
   // Step 1
@@ -101,7 +101,7 @@ function EditVariant({ setTitle, resetTitle }) {
       setVariantsLoading(false)
     }).catch(error => {
       console.error(error)
-      enqueueSnackbar("Произошла неизвестная ошибка", { variant: "error" })
+      enqueueSnackbar("Произошла неизвестная ошибка", {variant: "error"})
       history.push("/");
     })
   }
@@ -120,12 +120,12 @@ function EditVariant({ setTitle, resetTitle }) {
         variant: selectedVariant,
         number: -1,
       })
-      
+
       setAllTasks(tasks.sort((a, b) => a.number - b.number))
       setTasksLoading(false)
     }).catch(error => {
       console.error(error)
-      enqueueSnackbar("Произошла неизвестная ошибка", { variant: "error" })
+      enqueueSnackbar("Произошла неизвестная ошибка", {variant: "error"})
       history.push("/");
     })
   }
@@ -143,7 +143,7 @@ function EditVariant({ setTitle, resetTitle }) {
       setSubthemesLoading(false)
     }).catch(error => {
       console.error(error)
-      enqueueSnackbar("Произошла неизвестная ошибка", { variant: "error" })
+      enqueueSnackbar("Произошла неизвестная ошибка", {variant: "error"})
       history.push("/");
     })
   }
@@ -182,7 +182,7 @@ function EditVariant({ setTitle, resetTitle }) {
                     ...params.InputProps,
                     endAdornment: (
                       <>
-                        {variantsLoading ? <CircularProgress color="inherit" size={20} /> : null}
+                        {variantsLoading ? <CircularProgress color="inherit" size={20}/> : null}
                         {params.InputProps.endAdornment}
                       </>
                     ),
@@ -195,9 +195,9 @@ function EditVariant({ setTitle, resetTitle }) {
                 Назад
               </Button>
               <Button variant="contained" color="primary" className={classes.button} disabled={selectedVariant == null}
-                onClick={() => {
-                  setStep(1);
-                }}>Дальше</Button>
+                      onClick={() => {
+                        setStep(1);
+                      }}>Дальше</Button>
             </div>
           </StepContent>
         </Step>
@@ -240,7 +240,7 @@ function EditVariant({ setTitle, resetTitle }) {
                     ...params.InputProps,
                     endAdornment: (
                       <>
-                        {variantsLoading ? <CircularProgress color="inherit" size={20} /> : null}
+                        {variantsLoading ? <CircularProgress color="inherit" size={20}/> : null}
                         {params.InputProps.endAdornment}
                       </>
                     ),
@@ -256,14 +256,14 @@ function EditVariant({ setTitle, resetTitle }) {
                 Назад
               </Button>
               <Button variant="contained" color="primary" className={classes.button} disabled={selectedTask == null}
-                onClick={() => {
-                  selectTaskVariant(selectedTask["variant"])
-                  selectSubtheme(selectedTask["subtheme"])
-                  setContent(selectedTask["content"])
-                  setSolution(selectedTask["solution"])
-                  setNumber(selectedTask["number"])
-                  setStep(2);
-                }}>Дальше</Button>
+                      onClick={() => {
+                        selectTaskVariant(selectedTask["variant"])
+                        selectSubtheme(selectedTask["subtheme"])
+                        setContent(selectedTask["content"])
+                        setSolution(selectedTask["solution"])
+                        setNumber(selectedTask["number"])
+                        setStep(2);
+                      }}>Дальше</Button>
             </div>
           </StepContent>
         </Step>
@@ -302,7 +302,7 @@ function EditVariant({ setTitle, resetTitle }) {
                         ...params.InputProps,
                         endAdornment: (
                           <>
-                            {variantsLoading ? <CircularProgress color="inherit" size={20} /> : null}
+                            {variantsLoading ? <CircularProgress color="inherit" size={20}/> : null}
                             {params.InputProps.endAdornment}
                           </>
                         ),
@@ -338,7 +338,7 @@ function EditVariant({ setTitle, resetTitle }) {
                         ...params.InputProps,
                         endAdornment: (
                           <>
-                            {variantsLoading ? <CircularProgress color="inherit" size={20} /> : null}
+                            {variantsLoading ? <CircularProgress color="inherit" size={20}/> : null}
                             {params.InputProps.endAdornment}
                           </>
                         ),
@@ -364,7 +364,7 @@ function EditVariant({ setTitle, resetTitle }) {
                     if (isNaN(number)) return "Номер не должен быть пустым!"
                     if (number <= 0) return "Номер должен быть положителен!"
                   })()}
-                  fullWidth />
+                  fullWidth/>
               </Grid>
             </Grid>
             <TextField
@@ -378,19 +378,18 @@ function EditVariant({ setTitle, resetTitle }) {
               value={content}
               error={content.length === 0}
               helperText={content.length === 0 && "Текст задания не должен быть пустым!"}
-              fullWidth multiline rowsMax={7} />
+              fullWidth multiline rowsMax={9}/>
             <TextField
               className={classes.textField}
               variant="outlined"
-              label="Текст решения"
+              label="Текст ответа"
               type="text"
               onInput={/**React.ChangeEvent<HTMLInputElement>*/event => {
                 setSolution(event.target.value)
               }}
               value={solution}
-              error={solution.length === 0}
-              helperText={solution.length === 0 && "Текст решения не должен быть пустым!"}
-              fullWidth multiline rowsMax={7} />
+              helperText={solution.length === 0 && "Текст ответа пуст"}
+              fullWidth multiline rowsMax={9}/>
             <div className={classes.actionsContainer}>
               <Button className={classes.button} onClick={() => {
                 setStep(1);
@@ -399,92 +398,105 @@ function EditVariant({ setTitle, resetTitle }) {
               </Button>
               <div className={classes.buttonContainer}>
                 <Button variant="contained" color="primary" className={classes.button}
-                  disabled={selectedVariant == null || selectedSubtheme == null || isNaN(number) || number <= 0 || content.length === 0 || solution.length === 0 || taskPushing}
-                  onClick={() => {
-                    setTaskPushing(true)
-                    const body = JSON.stringify({
-                      number: number,
-                      content: content,
-                      solution: solution,
-                      subtheme_id: selectedSubtheme["id"],
-                      variant_id: selectedTaskVariant["id"]
-                    })
-                    let url = `${process.env.REACT_APP_API_ROOT}/variants/${selectedVariant["id"]}/tasks/`
-                    if (selectedTask["id"] !== -1) url += `${selectedTask["id"]}/`
-                    const method = selectedTask["id"] === -1 ? "POST" : "PUT"
-                    fetch(url, {
-                      method: method,
-                      credentials: "same-origin",
-                      body: body,
-                      headers: {
-                        "Content-Type": "application/json"
-                      }
-                    }).then(async response => {
-                      if (!response.ok) {
-                        setTaskPushing(false)
-                        enqueueSnackbar("Произошла неизвестная ошибка", { variant: "error" })
-                        console.error(response.statusText)
-                        return
-                      }
-                      const task = await response.json()
-                      selectTask(task)
-                      selectVariant(task["variant"])
-                      setTaskPushing(false)
-                      enqueueSnackbar(`Задание ${method === "POST" ? "создано" : "изменено"}!`, { variant: "success" })
-                    }).catch(error => {
-                      setTaskPushing(false)
-                      enqueueSnackbar("Произошла неизвестная ошибка", { variant: "error" })
-                      console.error(error)
-                    })
-                  }}>Готово</Button>
+                        disabled={selectedVariant == null || selectedSubtheme == null || isNaN(number) || number <= 0 || content.length === 0 || taskPushing}
+                        onClick={() => {
+                          setTaskPushing(true)
+                          const body = JSON.stringify({
+                            number: number,
+                            content: content,
+                            solution: solution,
+                            subtheme_id: selectedSubtheme["id"],
+                            variant_id: selectedTaskVariant["id"]
+                          })
+                          let url = `${process.env.REACT_APP_API_ROOT}/variants/${selectedVariant["id"]}/tasks/`
+                          if (selectedTask["id"] !== -1) url += `${selectedTask["id"]}/`
+                          const method = selectedTask["id"] === -1 ? "POST" : "PUT"
+                          fetch(url, {
+                            method: method,
+                            credentials: "same-origin",
+                            body: body,
+                            headers: {
+                              "Content-Type": "application/json"
+                            }
+                          }).then(async response => {
+                            if (!response.ok) {
+                              setTaskPushing(false)
+                              enqueueSnackbar("Произошла неизвестная ошибка", {variant: "error"})
+                              console.error(response.statusText)
+                              return
+                            }
+                            const task = await response.json()
+                            selectTask(task)
+                            selectVariant(task["variant"])
+                            setTaskPushing(false)
+                            enqueueSnackbar(`Задание ${method === "POST" ? "создано" : "изменено"}!`, {variant: "success"})
+                          }).catch(error => {
+                            setTaskPushing(false)
+                            enqueueSnackbar("Произошла неизвестная ошибка", {variant: "error"})
+                            console.error(error)
+                          })
+                        }}>Готово</Button>
                 {taskPushing && (
-                  <CircularProgress size={24} className={classes.buttonProgress} />
+                  <CircularProgress size={24} className={classes.buttonProgress}/>
                 )}
               </div>
               <div className={classes.buttonContainer}>
                 <Button variant="contained" color="inherit" className={clsx(classes.button, classes.deleteButton)}
-                  disabled={(selectedTask && selectedTask["id"] === -1) || taskPushing}
-                  onClick={() => {
-                    if (!promptDeletion) {
-                      setPromptDeletion(true)
-                      setTimeout(() => setPromptDeletion(false), 500)
-                      return
-                    }
-                    setPromptDeletion(false)
-                    setTaskPushing(true)
-                    let url = `${process.env.REACT_APP_API_ROOT}/variants/${selectedVariant["id"]}/tasks/${selectedTask["id"]}/`
-                    fetch(url, {
-                      method: "DELETE",
-                      credentials: "same-origin",
-                    }).then(response => {
-                      setTaskPushing(false)
-                      if (!response.ok) {
-                        enqueueSnackbar("Произошла неизвестная ошибка", { variant: "error" })
-                        console.error(response.statusText)
-                        return
-                      }
-                      enqueueSnackbar(`Задание удалено!`, { variant: "info" })
-                      setStep(0)
-                      selectTask(null)
-                    }).catch(error => {
-                      setTaskPushing(false)
-                      enqueueSnackbar("Произошла неизвестная ошибка", { variant: "success" })
-                      console.error(error)
-                    })
-                  }}>{promptDeletion ? "Точно?" : "Удалить"}</Button>
+                        disabled={(selectedTask && selectedTask["id"] === -1) || taskPushing}
+                        onClick={() => {
+                          if (!promptDeletion) {
+                            setPromptDeletion(true)
+                            setTimeout(() => setPromptDeletion(false), 500)
+                            return
+                          }
+                          setPromptDeletion(false)
+                          setTaskPushing(true)
+                          let url = `${process.env.REACT_APP_API_ROOT}/variants/${selectedVariant["id"]}/tasks/${selectedTask["id"]}/`
+                          fetch(url, {
+                            method: "DELETE",
+                            credentials: "same-origin",
+                          }).then(response => {
+                            setTaskPushing(false)
+                            if (!response.ok) {
+                              enqueueSnackbar("Произошла неизвестная ошибка", {variant: "error"})
+                              console.error(response.statusText)
+                              return
+                            }
+                            enqueueSnackbar(`Задание удалено!`, {variant: "info"})
+                            setStep(0)
+                            selectTask(null)
+                          }).catch(error => {
+                            setTaskPushing(false)
+                            enqueueSnackbar("Произошла неизвестная ошибка", {variant: "success"})
+                            console.error(error)
+                          })
+                        }}>{promptDeletion ? "Точно?" : "Удалить"}</Button>
                 {taskPushing && (
-                  <CircularProgress size={24} className={classes.buttonProgress} />
+                  <CircularProgress size={24} className={classes.buttonProgress}/>
                 )}
               </div>
               <Button variant="outlined" color="secondary" className={classes.button}
-                disabled={content.length === 0}
-                onClick={() => openContentPreview(true)}>Предпросмотр задания</Button>
+                      disabled={content.length === 0}
+                      onClick={() => openContentPreview(true)}>Предпросмотр задания</Button>
               <Button variant="outlined" color="secondary" className={classes.button}
-                disabled={solution.length === 0}
-                onClick={() => openSolutionPreview(true)}>Предпросмотр решения</Button>
+                      disabled={solution.length === 0}
+                      onClick={() => openSolutionPreview(true)}>Предпросмотр решения</Button>
+              <Tooltip title="Создать вариант с такой же темой и номером в следующем варианте" aria-label="add">
+                <Button variant="outlined" color="secondary" className={classes.button}>
+                  Следующий вариант
+                </Button>
+              </Tooltip>
+              {/*{
+        id: -1,
+        subtheme: null,
+        content: "",
+        solution: "",
+        variant: selectedVariant,
+        number: -1,
+      }*/}
             </div>
             <Dialog open={contentPreview} onClose={() => openContentPreview(false)} fullWidth>
-              <DialogTitle>Предспросмотр задания</DialogTitle>
+              <DialogTitle>Предпросмотр задания</DialogTitle>
               <DialogContent>
                 <RenderMarkdown>{content}</RenderMarkdown>
               </DialogContent>
@@ -493,7 +505,7 @@ function EditVariant({ setTitle, resetTitle }) {
               </DialogActions>
             </Dialog>
             <Dialog open={solutionPreview} onClose={() => openSolutionPreview(false)} fullWidth>
-              <DialogTitle>Предспросмотр решения</DialogTitle>
+              <DialogTitle>Предпросмотр решения</DialogTitle>
               <DialogContent>
                 <RenderMarkdown>{solution}</RenderMarkdown>
               </DialogContent>

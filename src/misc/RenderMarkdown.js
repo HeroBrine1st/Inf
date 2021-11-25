@@ -3,6 +3,7 @@ import {makeStyles} from "@material-ui/core/styles";
 import PropTypes from "prop-types";
 import remarkMath from "remark-math";
 import rehypeKatex from "rehype-katex";
+import remarkGfm from 'remark-gfm'
 import 'katex/dist/katex.min.css'
 import "./Markdown.css";
 
@@ -14,12 +15,14 @@ const useStyles = makeStyles(() => ({
 
 function RenderMarkdown(props) {
   const classes = useStyles()
-  return <ReactMarkdown
-    remarkPlugins={[remarkMath]}
-    rehypePlugins={[rehypeKatex]}
-    className={classes.markdown}>
-    {props.children}
-  </ReactMarkdown>
+  return <div className={classes.markdown}>
+    <ReactMarkdown
+      remarkPlugins={[remarkMath, remarkGfm]}
+      rehypePlugins={[rehypeKatex]}
+    >
+      {props.children}
+    </ReactMarkdown>
+  </div>
 }
 
 RenderMarkdown.propTypes = {
