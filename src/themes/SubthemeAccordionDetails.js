@@ -24,12 +24,12 @@ function SubthemeAccordionDetails(props) {
   const [collapseIn, setCollapseIn] = useState(false)
   const { url } = useRouteMatch()
   return <DownloadingJson
-    onResult={it => {
+      onResult={it => {
       setSubthemes(it)
       setTimeout(() => setCollapseIn(true), 0) // Костыль, но работает !
     }}
-    url={`${process.env.REACT_APP_API_ROOT}/themes/${props.id}/subthemes/`}
-    nobackdrop linear minDelay={250}>
+      url={`${process.env.REACT_APP_API_ROOT}/themes/${props.id}/subthemes/`}
+      noBackdrop linear minDelay={250}>
     <Collapse in={collapseIn}>
       <ul>
         {subthemes.map(it => (
