@@ -78,20 +78,20 @@ function NavigationDrawer(props) {
         </ListItem>
         <ListSubheader>Управление</ListSubheader>
         <DownloadingJson
-            onResult={() => setAuthorized(true)}
-            url={`${process.env.REACT_APP_API_ROOT}/checkauth`}
-            onError={() => {
+          onResult={() => setAuthorized(true)}
+          url={`${process.env.REACT_APP_API_ROOT}/checkauth/`}
+          onError={() => {
             setAuthDisabled(true) // No connection to server
             return true
           }}
-            onHttpError={/**Response*/it => {
+          onHttpError={/**Response*/it => {
             if (it.status === 503) {
               setAuthDisabled(true)
             }
             setAuthorized(false)
             return true
           }}
-            noBackdrop quiet linear>
+          noBackdrop quiet linear>
           {authorized ?
             <>
               <ListItem button component={Link} to="/panel" key="overview">
