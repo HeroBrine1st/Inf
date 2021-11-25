@@ -25,12 +25,8 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const charsetRegex = /charset=([^ ;]+)/gm;
-
 const LOADING = 0;
-const DOWNLOADING = 1;
-const PARSING = 2;
-const COMPLETED = 3;
+const COMPLETED = 1;
 const ERROR = -1;
 
 const transitionDuration = 300;
@@ -47,10 +43,6 @@ function DownloadingJson({
   const onResultRef = useRef()
   const onErrorRef = useRef()
   const onHttpErrorRef = useRef()
-
-  const [downloadedBytes, setDownloadedBytes] = useState(0)
-  const [contentLength, setContentLength] = useState(0)
-
   onResultRef.current = onResult
   onErrorRef.current = onError
   onHttpErrorRef.current = onHttpError || onError
@@ -62,49 +54,18 @@ function DownloadingJson({
       credentials: "same-origin"
     }).then(async response => {
       if (!response.ok) {
-        if (!pending) return
+        if(!pending) return
         if (response.status === 404) {
           setState(ERROR)
           setTimeout(() => history.push("/404/"), transitionDuration * 2)
         } else (onHttpErrorRef.current && onHttpErrorRef.current(response)) ? setState(COMPLETED) : setState(ERROR)
         return
       }
-      const contentLengthInternal = +response.headers.get("Content-Length")
-      if (contentLengthInternal === 0 && response.status !== 204) {
-        throw new Error("Content-Length is null or invalid: " + response.headers.get("Content-Length"))
-      }
-      setContentLength(contentLengthInternal);
-
-      if (minTime - Date.now() > 0)
+      if (minTime - Date.now() > 0) {
         await new Promise(resolve => setTimeout(resolve, minTime - Date.now()))
-      if (!pending) return
-
-      if (response.status === 204) onResultRef.current(null); else {
-        setState(DOWNLOADING)
-        const reader = response.body.getReader()
-        let chunks = new Uint8Array(contentLengthInternal); // Если там 0 или невалидно, то это бекенд дал ёбу, считаем как 500 и не выёбываемся с массивами
-        let downloadedBytesInternal = 0;
-        while (true) {
-          const {done, value} = await reader.read();
-          if (done) {
-            break;
-          }
-          chunks.set(value, downloadedBytesInternal);
-          downloadedBytesInternal = downloadedBytesInternal + value.length
-          setDownloadedBytes(downloadedBytesInternal)
-          if (!pending) return
-        }
-        let encoding = "utf-8";
-        if (response.headers.get("Content-Type") != null) {
-          let res = charsetRegex.exec(response.headers.get("Content-Type"))
-          if (res[1]) {
-            encoding = charsetRegex[1]
-          }
-        }
-        setState(PARSING);
-        let json = new TextDecoder(encoding).decode(chunks);
-        onResultRef.current(json);
       }
+      if (!pending) return
+      if(response.status === 204) onResultRef.current(); else onResultRef.current(await response.json())
       setState(COMPLETED)
     }).catch(error => {
       if (!pending) return
@@ -127,26 +88,10 @@ function DownloadingJson({
         <Typography variant="h6">Произошла ошибка</Typography>
       </>
       break;
-    case DOWNLOADING:
-      component = <>
-        {linear ?
-          <LinearProgress value={downloadedBytes / contentLength}/> :
-          <CircularProgress color="inherit" value={downloadedBytes / contentLength}/>}
-        <Typography variant="h6">Загружаем данные с сервера..</Typography>
-        {description && <Typography variant="subtitle1">{description}</Typography>}
-      </>
-      break
-    case PARSING:
-      component = <>
-        {linear ? <LinearProgress/> : <CircularProgress color="inherit" disableShrink/>}
-        <Typography variant="h6">Преобразовываем данные..</Typography>
-        {description && <Typography variant="subtitle1">{description}</Typography>}
-      </>
-      break
     default:
       component = <>
-        {linear ? <LinearProgress/> : <CircularProgress color="inherit"/>}
-        {description && <Typography variant="subtitle1">{description}</Typography>}
+        {linear ? <LinearProgress/> : <CircularProgress color="inherit" disableShrink/>}
+        {description && <Typography variant="h6">{description}</Typography>}
       </>
       break;
   }
